@@ -6,7 +6,7 @@ const app = express();
 const PORT = 3000;
 
 app.get("/", (_, res) => {
-	let content = fs.readFileSync("views/index.html");
+	let content = fs.readFileSync("views/home.html");
 	res.send(content.toString());
 });
 
