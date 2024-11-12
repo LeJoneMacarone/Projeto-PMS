@@ -21,7 +21,7 @@
             </div>
         </div>
     </nav>
-    <div>
+    <div id="container">
         <h1>Your Campaigns</h1>
         <p>Here are displayed the campaigns that are on going and that are validated by one of the admins.</p>
         <div>
@@ -46,10 +46,53 @@
                 <td>25 %</td>
                 <td>
                     <button>Remove</button>
-                    <button>Update</button>
+                    <button id="btnUpdate">Update</button>
                 </td>
             </tr>
         </table>
     </div>
+    
+    <script>
+        let container = document.getElementById("container");
+        let btn_update = document.getElementById("btnUpdate");
+        let showUpdateForm = false;
+
+        btn_update.addEventListener("click", () => {
+            if(!showUpdateForm){
+                container.insertAdjacentHTML("afterend", 
+                    `
+                    <div id="updateFormPopUp">
+                        <h2>Update Campaign</h2>
+                        <h3>For campaign: <span>Donate for kittens</span></h3>
+
+                        <p>Fill in the following fields to update donors and your campaign page about its progress</p>
+                        <p>* mandatory field</p>
+                        <form action="">
+                            <label>
+                                <span>Publication: <b>*</b></span>
+                                <textarea placeholder="Write here your publication" required></textarea>
+                            </label>
+                    
+                            <input type="file" name="" accept="video/* image/png image/jpeg">
+                    
+                            <div>
+                                <button type="submit">Publish</button>
+                                <button type="button">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                    `
+                );
+                showUpdateForm = ~showUpdateForm;
+            }
+            else{
+                let update_form = document.getElementById("updateFormPopUp");
+                if(update_form){
+                    update_form.remove();
+                    showUpdateForm = ~showUpdateForm;
+                }
+            }
+        });
+    </script>
 </body>
 </html>
