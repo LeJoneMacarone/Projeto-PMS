@@ -17,10 +17,10 @@
             </div>
         </div>
     </nav>
-    <div>
+    <div id="container">
         <!-- Right column -->
         <div>
-            <button>Donate</button>
+            <button id="btn_donate">Donate</button>
             
             <div>
                 <h4>Donated money:</h4>
@@ -103,5 +103,62 @@
             </div>
         </div>
     </div>
+
+    <script>
+        let container = document.getElementById("container");
+        let btn_donate = document.getElementById("btn_donate");
+        let showPopUp = false;
+
+        // Show pop up to pay for the donation
+        btn_donate.addEventListener("click", ()=>{
+            if(!showPopUp){
+                container.insertAdjacentHTML("afterend",
+                    `
+                    <div id="donatePopUp">
+                        <button>X</button>
+                        <div>
+                            <h2>Donate money for the campaign:</h3>
+                            <h3>Food for kittens</h4>
+                        </div>
+
+                        <form action="">
+                            <label>
+                                <span>Anonymous donation</span>
+                                <input type="checkbox">
+                            </label>
+
+                            <label>
+                                <span>How much would you like to donate?</span>
+                                <input type="number">
+                                <span>€</span>
+                            </label>
+
+                            <label>
+                                <span>Donation method</span>
+                                <select name="donation_method" id="">
+                                    <option value="multibanco">Multibanco</option>
+                                    <option value="mbway">MBWay</option>
+                                    <option value="paypal">PayPal</option>
+                                    <option value="paysafecard">Paysafecard</option>
+                                </select>
+                            </label>
+
+                            <button type="submit">Donate</button>
+                        </form>
+                    </div> 
+                    `
+                );
+                showPopUp = ~showPopUp;
+            }
+            else{
+                let donatePopUp = document.getElementById("donatePopUp");
+                
+                if(donatePopUp){ 
+                    donatePopUp.remove();
+                    showPopUp = ~showPopUp;
+                }
+            }
+        });
+    </script>
 </body>
 </html>
