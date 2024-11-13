@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - campaign creator</title>
+</head>
+
+<body>
+    <nav>
+        <div>
+            <img src="" alt="logo">
+        </div>
+    </nav>
+    <div>
+        <a>Go Back</a>
+        <form action="register" method="POST">
+            <h3>Sign up</h3>
+            <p>Role</p>
+            <li>
+                <button>
+                    <ul>Donor</ul>
+                </button>
+                <button>
+                    <ul>Campaign creator</ul>
+                </button>
+
+            </li>
+            <p>Username</p>
+            <input type="text" name="username">
+            <p>Password</p>
+            <input type="password" name="password">
+            <p>Confirm password</p>
+            <input type="password" name="confirm_password">
+            <p>Documents</p>
+            <label for="doc_id">Identification document in PDF format *</label>
+            <input type="file" name="doc_id" id="doc_id">
+            <label for="iban">Bank Account Information Document (IBAN) *</label>
+            <input type="file" name="iban" id="iban">
+            <input type="submit" value="Sign up">
+        </form>
+        <!-- Register link -->
+        <p>Already have an account?</p>
+        <a href="login.html">Sign in</a>
+    </div>
+</body>
+
+</html>
