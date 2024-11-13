@@ -22,7 +22,7 @@
 
             <img src="" alt="campaign_multimedia_1">
             <% campaign.media.forEach((media,i) => { %>
-                <img src=`data:image/gif;base64,${media}` alt=`media ${i}`>
+                <img src="data:image/gif;base64,<%= media %>" alt="media <%= i %>">
             <% }); %>
         </div>
 
