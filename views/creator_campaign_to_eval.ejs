@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creator Campaigns to Evaluate</title>
+</head>
+<body>
+    <%- include("./partials/nav_bar.ejs") %>
+    <div>
+        <%- include("./partials/creator_opt_bar.ejs") %>
+        <table>
+            <tr>
+                <th>Title</th>
+                <th>State</th>
+                <th>Send Date<th>
+                <th>Admin that evaluate</th>
+            </tr>
+            
+            <% campaigns.forEach((campaign) => { %>
+                <tr>
+                    <td><%= campaign.title %></td>
+                    <td><%= campaign.state %></td>
+                    <td><%= campaign.date %></td>
+                    <td><% campaign.state == "Evaluating" ? "---" : campaign.eval_admin %></td>
+                </tr>
+            <% }); %>
+        </table>
+    </div>
+</body>
+</html>
