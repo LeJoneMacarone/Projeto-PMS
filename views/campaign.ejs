@@ -6,100 +6,101 @@
     <title>Campaign  Info</title>
 </head>
 <body>
-    <nav>
-        <div>
-            <img src="" alt="logo">
-        </div>
-        <div>
-            <button type="button">v</button>
-            <div>
-                <img src="" alt="profile">
-            </div>
-        </div>
-    </nav>
+    <%- include("./partials/nav_bar.ejs") %>
     <div id="container">
         <!-- Right column -->
         <div>
-            <button id="btn_donate">Donate</button>
+            <% if(user.localeCompare("donor") == 0) { %>
+                <button id="btn_donate">Donate</button>
+            <% } %>
             
             <div>
                 <h4>Donated money:</h4>
                 <p>**till this moment</p>
                 <div>
-                    <!-- Donated money value -->
-                    55 €
+                    <%= campaign.money_donated %> €
                 </div>
             </div>
             
-            <div>
-                <h4>Top 5 donors:</h4>
-                <p>**till this moment</p>
-                <!-- List of the top 5 donors -->
+            <%= if(campaign.topDonors.length > 0) { %>
                 <div>
-                    <!-- Donor line FOR EACH 5 OR LESS-->
+                    <h4>Top 5 donors:</h4>
+                    <p>**till this moment</p>
+                    <!-- List of the top 5 donors -->
                     <div>
-                        <div>
-                            <img src="" alt="donor_profile">
-                            <span>johnDark</span>
-                        </div>
-                        <div>
-                            <!-- Total money donated of this donor for this campaign -->
-                            15€
-                        </div>
+                        <% campaign.topDonors.forEach((donor) => { %> 
+                            <div>
+                                <div>
+                                    <img src="data:image/gif;base64,<%= donor.profile %>" alt="donor_profile">
+                                    <span><%= donor.username %></span>
+                                </div>
+                                <div>
+                                    <!-- Total money donated of this donor for this campaign -->
+                                    <% donor.money_donated %> €
+                                </div>
+                            </div>
+                        <% }); %>
                     </div>
                 </div>
-            </div>
-
-            <div>
-                <h4>5 New donors:</h4>
-                <p>**till this moment</p>
-                <!-- List of the 5 new donors -->
+            <% } %>
+            <% if(campaign.newDonors.length > 0) { %>
                 <div>
-                    <!-- Donor line FOR EACH 5 OR LESS-->
-                    <div>
+                    <h4>5 New donors:</h4>
+                    <p>**till this moment</p>
+                    <% campaign.newDonors.forEach((donor) => { %>
                         <div>
-                            <img src="" alt="donor_profile">
-                            <span>mrWhite</span>
+                            <!-- Donor line FOR EACH 5 OR LESS-->
+                            <div>
+                                <div>
+                                    <img src="data:image/gif;base64,<%= donor.profile %>" alt="donor_profile">
+                                    <span><%= donor.username %></span>
+                                </div>
+                                <div>   
+                                    <!-- Quantity of money donated on that new donation -->
+                                    <% donor.money_donated %> €
+                                </div>
+                            </div>
                         </div>
-                        <div>   
-                            <!-- Quantity of money donated on that new donation -->
-                            1 €
-                        </div>
-                    </div>
+                    <% } %>
                 </div>
-            </div>
+            <% } %>
         </div>
 
         <!-- Left column -->
         <div>
-            <h1>Food for kittens</h1>
-            <!-- Creator info -->
+            <h1><%= campaign.title %></h1>
             <div>
-                <img src="" alt="creator_profile">
-                <span>maria@jose</span>
+                <img src="data:image/gif;base64,<%= campaign.creator.profile %>" alt="creator_profile">
+                <span><%= campaign.creator.username %></span>
             </div>
-            <!-- Campaign goal-->
-            <p><b>Goal:</b> 500€</p>
-            <!-- Campaign description -->
+            
+            <p><b>Goal:</b> <%= campaign.goal %> €</p>
+            
             <div>
-                Fund money to help feed the kittens at Santa Catarina park
+                <%= campaign.description %>
             </div>
-            <!-- Campaign description image or video -->
+                <% campaign.media.forEach((media,i) => { %>
+                    <img src="data:image/gif;base64,<%= media %>" alt="media <%= i %>">
+                <% }); %>
+            
             <div>
+                <!--Divisor-->
             </div>
             
             <h2>Updates</h2>
-            <!-- List of the updates -->
+            
             <div>
-                <!-- Update container -->
-                <div>
-                    <!-- Date of the update creation -->
-                    <p>06/11/2023</p>
+                <% campaign.updates.forEach((update) => { %>
                     <div>
-                        <img src="" alt="update">
-                        <div>Food of the kittens brought with the donation money till now. Thank you so much for your help!</div>
+                        <p><%= update.date %></p>
+                        <div>
+                            <% if(typeof update.image === "string" && update.image.length > 0) { %>
+                                <img src="data:image/gif;base64,<%= update.image %>" alt="update">
+                            <% } %>
+                            <div><%= update.description %></div>
+                        </div>
                     </div>
-                </div>
+                <% } %>
             </div>
         </div>
     </div>
