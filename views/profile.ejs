@@ -6,33 +6,23 @@
     <title>Profile</title>
 </head>
 <body>
-    <nav>
-        <div>
-            <img src="" alt="logo">
-        </div>
-        <div>
-            <button type="button">v</button>
-            <div>
-                <img src="" alt="profile">
-            </div>
-        </div>
-    </nav>
+    <%- include("./partials/nav_bar.ejs") %>
     <div>
        <!--Left column-->
        <div>
-            <img src="" alt="profile">
+            <img src="data:image/gif;base64,<%= user.image %>" alt="profile">
        </div>
        <!--Right column-->
        <div>
         <form action="">
             <label>
                 <span>Username</span>
-                <textarea name="username">João Batista</textarea>
+                <textarea name="username"><%= user.username %></textarea>
             </label>
         </form>
         
         <div>
-            <!--Invert here a divisor-->
+            <!--Divisor-->
         </div>
 
         <form action="">
