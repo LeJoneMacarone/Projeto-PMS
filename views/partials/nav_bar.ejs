@@ -1,0 +1,27 @@
+<nav>
+    <div>
+        <img src="" alt="logo">
+    </div>
+    <div>
+        <% if(user.localeCompare("creator") == 0 || user.localeCompare("admin") == 0) { %>
+            <a href="">Campaigns</a>
+        <% } %>
+
+        <% if(user.localeCompare("admin") == 0) { %>
+            <a href="">Campaigns Creators</a>
+            <a href="">Reports</a>
+        <% } %>
+
+        <% if(user.localeCompare("root_admin") == 0) { %>
+            <a href="">Add Admins</a>
+        <% } %>
+    </div>
+    <div>
+        <% if(user !== null && user.trim() !== "") { %>
+            <button type="button">v</button>
+            <div>
+                <img src="" alt="profile">
+            </div>
+        <% } %>
+    </div>
+</nav>
