@@ -1,18 +1,15 @@
-const fs = require("fs")
 const express = require("express");
+
+const campaignController = require("./controllers/campaign-controller");
 
 const app = express();
 
 const PORT = 3000;
 
-
 app.set('views', `${__dirname}/views`)
-app.set('views engine', 'ejs')
+app.set('view engine', 'ejs')
 
-app.get("/", (_, res) => {
-	let content = fs.readFileSync("views/home.html");
-	res.send(content.toString());
-});
+app.get("/", campaignController.viewCampaigns);
 
 app.listen(PORT, () => {
 	console.log(`Listenning at port ${PORT}`)
