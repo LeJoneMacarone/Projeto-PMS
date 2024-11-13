@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign To Validate Info</title>
+</head>
+<body>
+    <%- include("./partials/nav_bar.ejs"); %>
+    <div>
+        <a>Go Back</a>
+        <h1>Smiles for everyone</h1>
+        <div>
+            <ul>
+                <li><b>Creator: </b><%= campaign.creator %></li>
+                <li><b>Description: </b><%= campaign.description %></li>
+                <li><b>Goal: </b><%= campaign.goal %> €</li>
+            </ul>
+        </div>
+        <div>
+            <h3>Multimedia for the campaign</h3>
+
+            <img src="" alt="campaign_multimedia_1">
+            <% campaign.media.forEach((media,i) => { %>
+                <img src=`data:image/gif;base64,${media}` alt=`media ${i}`>
+            <% }); %>
+        </div>
+
+        <div>
+            <form action="">
+                <button type="submit">Approved</button>
+            </form>
+            <form action="">
+                <button type="submit">Reject</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
