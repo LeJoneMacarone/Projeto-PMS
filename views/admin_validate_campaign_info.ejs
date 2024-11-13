@@ -20,7 +20,6 @@
         <div>
             <h3>Multimedia for the campaign</h3>
 
-            <img src="" alt="campaign_multimedia_1">
             <% campaign.media.forEach((media,i) => { %>
                 <img src="data:image/gif;base64,<%= media %>" alt="media <%= i %>">
             <% }); %>
