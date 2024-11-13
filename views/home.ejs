@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<body>
+    <%- include("./partials/nav_bar.ejs") %>
+    <div>
+        <h1>Campaigns</h1>
+        <!-- Container where is gonna go the campaign preview FOR EACH CAMPAIGN -->
+        <div>
+            <% campaigns.forEach((campaign) => { %>
+                <a href="">
+                    <h3><%= campaign.title %></h3>
+
+                    <div>
+                        <img src="data:image/gif;base64,<%= campaign.creator.profile %>" alt="creator_profile">
+                        <span><%= campaign.creator.username %></span>
+                    </div>
+
+                    <p><b>Goal: </b><%= campaign.goal %> €</p>
+
+                    <div>
+                        <%= campaign.description %>
+                    </div>
+
+                    <div style="background: linear-gradient(to right, green <%= campaign.donations_percentage %>%, white <%= campaign.donations_percentage %>%);"></div>
+                </a>
+            <% }); %>
+        </div>
+    </div>
+</body>
+</html>
