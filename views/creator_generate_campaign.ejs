@@ -6,28 +6,9 @@
     <title>Creator Generate Campaign</title>
 </head>
 <body>
-    <nav>
-        <div>
-            <img src="" alt="logo">
-        </div>
-        <div>
-            <a href="">Your Campaigns</a>
-            <a href="">Campaigns</a>
-        </div>
-        <div>
-            <button type="button">v</button>
-            <div>
-                <img src="" alt="profile">
-            </div>
-        </div>
-    </nav>
+    <%- include("./partials/nav_bar.ejs") %>
     <div>
-        <h1>Your Campaigns</h1>
-        <div>
-            <a href="">Generate</a>
-            <a href="">Created</a>
-            <a href="">Evaluate</a>
-        </div>
+        <%- include("./partials/creator_opt_bar.ejs") %>
         <div>
             <h3>Form to generate the campaign</h3>
             <form>
@@ -50,7 +31,7 @@
                 </label>
                 <label>
                     <span>Images or videos (that you like to show the donors about the campaign)</span>
-                    <input type="file" name="" accept="video/* image/png image/jpeg">
+                    <input type="file" name="" accept="image/png image/jpeg">
                 </label>
                 <div>
                     <button type="submit">Generate</button>
