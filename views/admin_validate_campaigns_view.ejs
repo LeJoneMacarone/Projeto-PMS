@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaigns To Validate</title>
+</head>
+
+<body>
+    <%- include("./partials/nav_bar.ejs"); %>
+        <div>
+            <h1>New Campaigns</h1>
+            <p>Here are the new campaigns that required to be validated.</p>
+            <div>
+                <div>
+                    <% campaigns.forEach(i=> { %>
+                        <div>
+                            <h3>
+                                <%= i.name %>
+                            </h3>
+                            <div>
+                                <img src="" alt="creator_profile">
+                                <span>
+                                    <%= i.creator %>
+                                </span>
+                            </div>
+                            <div>
+                                <div>
+                                    <span><b>Description: </b>
+                                        <%= i.description %>
+                                    </span>
+                                    <span><b>Goal: </b>
+                                        <%= i.goal %> €
+                                    </span>
+                                </div>
+                                <div>
+                                    <% i.media.forEach((i)=> { %>
+                                        <img src="" alt="">
+                                        <% }); %>
+                                </div>
+                            </div>
+                            <form action="">
+                                <button type="submit">Approve</button>
+                            </form>
+                            <form action="">
+                                <button type="submit">Reject</button>
+                            </form>
+                        </div>
+                        <% }); %>
+                </div>
+            </div>
+        </div>
+</body>
+
+</html>

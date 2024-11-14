@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - donor</title>
+</head>
+
+<body>
+    <%- include("./partials/nav_bar.ejs"); %>
+        <div>
+            <a>Go Back</a>
+            <form action="register_donor.ejs" method="POST">
+                <h3>Sign up</h3>
+                <p>Role</p>
+                <li>
+                    <button>
+                        <ul>Donor</ul>
+                    </button>
+                    <button>
+                        <ul>Campaign creator</ul>
+                    </button>
+
+                </li>
+                <p>Username</p>
+                <input type="text" name="username">
+                <p>Password</p>
+                <input type="password" name="password">
+                <p>Confirm password</p>
+                <input type="password" name="confirm_password">
+                <input type="submit" value="Sign up">
+            </form>
+            <!-- Register link -->
+            <p>Already have an account?</p>
+            <a href="login.ejs">Sign in</a>
+        </div>
+</body>
+
+</html>

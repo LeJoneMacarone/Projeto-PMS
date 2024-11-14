@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Info</title>
+</head>
+
+<body>
+    <%- include("./partials/nav_bar.ejs"); %>
+        <div>
+            <a href="">Go Back</a>
+            <h1>Report</h1>
+            <div>
+                <ul>
+                    <li><b>-> Title: </b>
+                        <%= report.title %>
+                    </li>
+                    <li><b>-> Creator: </b>
+                        <%= report.creator %>
+                    </li>
+                    <li><b>-> Reported by: </b>
+                        <%= report.reporter %>
+                    </li>
+                    <li><b>-> Reasons: </b>
+                        <%= report.reasons %>
+                    </li>
+                </ul>
+                <button>Hides campaign</button>
+            </div>
+        </div>
+
+</body>
+
+</html>
