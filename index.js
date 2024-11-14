@@ -10,6 +10,7 @@ app.set('views', `${__dirname}/views`)
 app.set('view engine', 'ejs')
 
 app.get("/", campaignController.viewCampaigns);
+app.get("/campaign/:id", campaignController.viewCampaign);
 
 app.listen(PORT, () => {
 	console.log(`Listenning at port ${PORT}`)
