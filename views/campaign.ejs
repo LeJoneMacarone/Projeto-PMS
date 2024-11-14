@@ -18,11 +18,11 @@
                 <h4>Donated money:</h4>
                 <p>**till this moment</p>
                 <div>
-                    <%= campaign.money_donated %> €
+                    <%= campaign.amountDonated %> €
                 </div>
             </div>
             
-            <%= if(campaign.topDonors.length > 0) { %>
+            <% if(campaign.topDonors.length > 0) { %>
                 <div>
                     <h4>Top 5 donors:</h4>
                     <p>**till this moment</p>
@@ -36,7 +36,7 @@
                                 </div>
                                 <div>
                                     <!-- Total money donated of this donor for this campaign -->
-                                    <% donor.money_donated %> €
+                                    <%= donor.amountDonated %> €
                                 </div>
                             </div>
                         <% }); %>
@@ -61,7 +61,7 @@
                                 </div>
                             </div>
                         </div>
-                    <% } %>
+                    <% }); %>
                 </div>
             <% } %>
         </div>
@@ -100,7 +100,7 @@
                             <div><%= update.description %></div>
                         </div>
                     </div>
-                <% } %>
+                <% }); %>
             </div>
         </div>
     </div>
