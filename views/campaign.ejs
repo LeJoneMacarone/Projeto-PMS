@@ -79,10 +79,11 @@
             <div>
                 <%= campaign.description %>
             </div>
+			<% if (campaign.media) { %>
                 <% campaign.media.forEach((media,i) => { %>
                     <img src="data:image/gif;base64,<%= media %>" alt="media <%= i %>">
                 <% }); %>
-            
+			<% } %>
             <div>
                 <!--Divisor-->
             </div>
