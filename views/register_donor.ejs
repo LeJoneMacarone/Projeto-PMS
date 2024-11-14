@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("./partials/head.ejs", {title: "Register - Donor"});  %>
+<body>
+    <%- include("./partials/nav_bar.ejs"); %>
+        <div>
+            <a>Go Back</a>
+            <form action="register_donor.ejs" method="POST">
+                <h3>Sign up</h3>
+                <p>Role</p>
+                <li>
+                    <button>
+                        <ul>Donor</ul>
+                    </button>
+                    <button>
+                        <ul>Campaign creator</ul>
+                    </button>
+
+                </li>
+                <p>Username</p>
+                <input type="text" name="username">
+                <p>Password</p>
+                <input type="password" name="password">
+                <p>Confirm password</p>
+                <input type="password" name="confirm_password">
+                <input type="submit" value="Sign up">
+            </form>
+            <!-- Register link -->
+            <p>Already have an account?</p>
+            <a href="login.ejs">Sign in</a>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("./partials/head.ejs", {title: "Report Info"});  %>
+
+<body>
+    <%- include("./partials/nav_bar.ejs"); %>
+        <div>
+            <a href="">Go Back</a>
+            <h1>Report</h1>
+            <div>
+                <ul>
+                    <li><b>-> Title: </b>
+                        <%= report.title %>
+                    </li>
+                    <li><b>-> Creator: </b>
+                        <%= report.creator %>
+                    </li>
+                    <li><b>-> Reported by: </b>
+                        <%= report.reporter %>
+                    </li>
+                    <li><b>-> Reasons: </b>
+                        <%= report.reasons %>
+                    </li>
+                </ul>
+                <button>Hides campaign</button>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+
+</html>

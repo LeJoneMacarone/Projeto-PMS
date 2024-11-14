@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("./partials/head.ejs", {title: "Campaign To Validate"});  %>
+
+<body>
+    <%- include("./partials/nav_bar.ejs"); %>
+        <div>
+            <h1>New Campaigns</h1>
+            <p>Here are the new campaigns that required to be validated.</p>
+            <div>
+                <div>
+                    <% campaigns.forEach(i=> { %>
+                        <div>
+                            <h3>
+                                <%= i.name %>
+                            </h3>
+                            <div>
+                                <img src="" alt="creator_profile">
+                                <span>
+                                    <%= i.creator %>
+                                </span>
+                            </div>
+                            <div>
+                                <div>
+                                    <span><b>Description: </b>
+                                        <%= i.description %>
+                                    </span>
+                                    <span><b>Goal: </b>
+                                        <%= i.goal %> €
+                                    </span>
+                                </div>
+                                <div>
+                                    <% i.media.forEach((i)=> { %>
+                                        <img src="" alt="">
+                                        <% }); %>
+                                </div>
+                            </div>
+                            <form action="">
+                                <button type="submit">Approve</button>
+                            </form>
+                            <form action="">
+                                <button type="submit">Reject</button>
+                            </form>
+                        </div>
+                        <% }); %>
+                </div>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+
+</html>
