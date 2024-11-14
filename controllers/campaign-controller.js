@@ -4,7 +4,7 @@ const DONATIONS = require("../models/donations-model");
 const UPDATES = require("../models/updates-model");
 
 /** 
- * Render the campaigns.
+ * Render the campaigns page.
  *
  * @param{import("express").Request} req - The express request object.
  * @param{import("express").Response} res - The express response object.
@@ -12,29 +12,20 @@ const UPDATES = require("../models/updates-model");
  * @returns{void}
  */
 function viewCampaigns(req, res) {
-	// TODO: fetch user from user repository or session variable
-	let user = "admin";
+	// TODO: dinamically get number page
+	let campaigns = CAMPAIGNS.slice(0,6);
+	campaigns.forEach(campaign => 
+		campaign.creator = USERS.find(user => user.id == campaign.creatorId)
+	);
 
-	// TODO: fetch campaign from campaigns repo
-	let campaigns = [
-		{
-			title: "Title",
-			creator: null,
-			description: "Description.",
-			goal: 100000,
-			donationsPercentage: 0,
-			updates: null,
-			creator: {
-				username: "name",
-			},
-		}
-	];
+	// TODO: get user role from session variable
+	const user = "donor";
 
 	res.render("home", { user, campaigns });
 }
 
 /** 
- * Render the campaign with the specified id.
+ * Render the campaign page with the specified id.
  *
  * @param{import("express").Request} req - The express request object.
  * @param{import("express").Response} res - The express response object.
