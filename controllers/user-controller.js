@@ -12,7 +12,7 @@ const USERS = require("../models/users-model");
 function renderRegisterPage(req, res) {
 	const error = req.session.message;
 	req.session.message = "";
-	res.render("register", { user: "", error });
+	res.render("register", { error });
 }
 
 /** 
@@ -29,7 +29,7 @@ function renderLoginPage(req, res) {
 	const error = req.session.message;
 	req.session.message = "";
 	
-	res.render("login", { user: "", error });
+	res.render("login", { error });
 }
 
 /** 
@@ -41,7 +41,7 @@ function renderLoginPage(req, res) {
  * @returns{void}
  */
 function renderProfilePage(req, res) {
-	const user = req.session.user || "";
+	const { user } = req.session;
 	res.render("profile", { user });
 }
 

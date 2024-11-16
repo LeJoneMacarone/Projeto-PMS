@@ -2,26 +2,26 @@
     <div>
         <img src="/images/logo.png" alt="logo">
     </div>
-    <div>
-        <% if(user.localeCompare("creator") == 0 || user.localeCompare("admin") == 0) { %>
-            <a href="">Campaigns</a>
-        <% } %>
+	<% if (user) { %>
+		<div>
+			<% if (user.role.localeCompare("creator") == 0 || user.localeCompare("admin") == 0) { %>
+				<a href="">Campaigns</a>
+			<% } %>
 
-        <% if(user.localeCompare("admin") == 0) { %>
-            <a href="">Campaigns Creators</a>
-            <a href="">Reports</a>
-        <% } %>
+			<% if (user.role.localeCompare("admin") == 0) { %>
+				<a href="">Campaigns Creators</a>
+				<a href="">Reports</a>
+			<% } %>
 
-        <% if(user.localeCompare("root_admin") == 0) { %>
-            <a href="">Add Admins</a>
-        <% } %>
-    </div>
-    <div>
-        <% if(user !== null && user.trim() !== "") { %>
-            <button type="button">v</button>
-            <div>
-                <img src="" alt="profile">
-            </div>
-        <% } %>
-    </div>
+			<% if (user.role.localeCompare("root_admin") == 0) { %>
+				<a href="">Add Admins</a>
+			<% } %>
+		</div>
+		<div>
+			<button type="button">v</button>
+			<div>
+				<img src="" alt="profile">
+			</div>
+		</div>
+	<% } %>
 </nav>

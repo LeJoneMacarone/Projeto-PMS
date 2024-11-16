@@ -6,7 +6,7 @@
     <div id="container">
         <!-- Right column -->
         <div>
-            <% if(user.localeCompare("donor") == 0) { %>
+            <% if(user && user.role.localeCompare("donor") == 0) { %>
                 <button id="btn_donate">Donate</button>
             <% } %>
             
@@ -14,7 +14,7 @@
                 <h4>Donated money:</h4>
                 <p>**till this moment</p>
                 <div>
-                    <%= campaign.amountDonated %> €
+                    <%= campaign.totalDonated %> €
                 </div>
             </div>
             
@@ -53,7 +53,7 @@
                                 </div>
                                 <div>   
                                     <!-- Quantity of money donated on that new donation -->
-                                    <% donor.money_donated %> €
+                                    <% donor.amountDonated %> €
                                 </div>
                             </div>
                         </div>
@@ -76,7 +76,7 @@
                 <%= campaign.description %>
             </div>
 			<% if (campaign.media) { %>
-                <% campaign.media.forEach((media,i) => { %>
+                <% campaign.media.forEach((media, i) => { %>
                     <img src="data:image/gif;base64,<%= media %>" alt="media <%= i %>">
                 <% }); %>
 			<% } %>
@@ -89,12 +89,12 @@
             <div>
                 <% campaign.updates.forEach((update) => { %>
                     <div>
-                        <p><%= update.date %></p>
+                        <p><%= update.publication %></p>
                         <div>
                             <% if(typeof update.image === "string" && update.image.length > 0) { %>
                                 <img src="data:image/gif;base64,<%= update.image %>" alt="update">
                             <% } %>
-                            <div><%= update.description %></div>
+                            <div><%= update.content %></div>
                         </div>
                     </div>
                 <% }); %>

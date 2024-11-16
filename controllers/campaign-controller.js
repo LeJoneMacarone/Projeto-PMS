@@ -18,8 +18,7 @@ function viewCampaigns(req, res) {
 		campaign.creator = USERS.find(user => user.id == campaign.creatorId)
 	);
 
-	// TODO: get user role from session variable
-	const user = "donor";
+	const { user } = req.session;
 
 	res.render("home", { user, campaigns });
 }
@@ -61,8 +60,7 @@ function viewCampaign(req, res) {
 
 	campaign.updates = UPDATES.filter(update => update.campaignId == id)
 
-	// TODO: get user role from session variable
-	const user = "donor"
+	const { user } = req.session;
 
 	res.render("campaign", { user, campaign });
 }
