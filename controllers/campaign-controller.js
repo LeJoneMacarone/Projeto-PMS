@@ -17,7 +17,7 @@ function viewCampaigns(req, res) {
 			creator: null,
 			description: "Description.",
 			goal: 100000,
-			donationsPercentage: 0,
+			donationsPercentage: 20,
 			updates: null,
 			creator: {
 				username: "name",
