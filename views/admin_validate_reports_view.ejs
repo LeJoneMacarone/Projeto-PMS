@@ -1,26 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- include("./partials/head.ejs", {title: "Reports To Validate"});  %>
+<%- include("./partials/head.ejs", {title: "Reports To Validate" }); %>
 
-<body>
-    <%- include("./partials/nav_bar.ejs"); %>
-        <div>
-            <h1>Reports</h1>
-            <p>Here are the new reports that required to be validated.</p>
-            <div>
-                <% reports.forEach(r=> { %>
-                    <div>
-                        <h3>
-                            <%= r.title %>
-                        </h3>
-                        <p>Reported by: <%= r.reporter %> (<%= r.reporter.role %>)
-                        </p>
-                        <a href="">More info</a>
+    <body>
+        <%- include("./partials/nav_bar.ejs"); %>
+            <div class="d-flex justify-content-center align-items-center">
+                <div class="container py-5">
+                    <!-- Title -->
+                    <h1 class="mb-4">Reports</h1>
+                    <p class="text-muted">Here are the new reports that required to be validated:</p>
+                    <!-- Reports list -->
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div class="d-flex flex-column gap-3 mt-4">
+                            <!-- Report 1 -->
+                            <div class="p-4 position-relative"
+                                style="max-width: 700px; background-color: #d6e8d6; border-radius: 30px;">
+                                <div>
+                                    <h3 class="mb-3">A Greener Future</h3>
+                                    <p class="mb-3 fw-bold">Reported by: <span class="fw-normal">eco_ativista
+                                            (donor)</span>
+                                    </p>
+                                </div>
+                                <a href="#" class="position-absolute"
+                                    style="right: 20px; bottom: 20px; color: #3d704d;">More info</a>
+
+                            </div>
+                            <!-- Report 2 -->
+                            <div class="p-4 position-relative"
+                                style="max-width: 700px; background-color: #d6e8d6; border-radius: 30px;">
+                                <div>
+                                    <h3 class=" mb-3">Hearts with more accessible Technologies</h3>
+                                    <p class="mb-3 fw-bold">Reported by: <span class="fw-normal">detetive_curioso
+                                            (donor)</span>
+                                    </p>
+                                </div>
+                                <a href="#" class="position-absolute"
+                                    style="right: 20px; bottom: 20px; color: #3d704d;">More info</a>
+                            </div>
+                            <!-- Report 3 -->
+                            <div class="p-4 position-relative"
+                                style="max-width: 700px; background-color: #d6e8d6; border-radius: 30px;">
+                                <div>
+                                    <h3 class=" mb-3">Support for Young Musical Talents</h3>
+                                    <p class="mb-3 fw-bold">Reported by: <span class="fw-normal">inova_inclusao
+                                            (campaign
+                                            creator)</span></p>
+                                </div>
+                                <a href="#" class="position-absolute"
+                                    style="right: 20px; bottom: 20px; color: #3d704d;">More info</a>
+                            </div>
+                        </div>
                     </div>
-                    <% }); %>
+                </div>
             </div>
-        </div>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-</body>
+            <script src=" https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+                crossorigin="anonymous"></script>
+            <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
 
 </html>

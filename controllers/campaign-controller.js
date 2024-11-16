@@ -25,7 +25,7 @@ function viewCampaigns(req, res) {
 		}
 	]
 
-	res.render("home", { user, campaigns });
+	res.render("register", { user, campaigns });
 }
 
 module.exports = { viewCampaigns }
