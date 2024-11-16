@@ -30,6 +30,7 @@ app.get("/login", userController.renderLoginPage);
 app.get("/profile", userController.renderProfilePage);
 app.post("/register", userController.register);
 app.post("/login", userController.login);
+app.post("/logout", userController.logout);
 app.post("/profile", userController.update);
 app.get("/", campaignController.viewCampaigns);
 app.get("/campaign/:id", campaignController.viewCampaign);

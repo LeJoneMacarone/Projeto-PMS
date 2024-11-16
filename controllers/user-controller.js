@@ -10,9 +10,9 @@ const USERS = require("../models/users-model");
  * @returns{void}
  */
 function renderRegisterPage(req, res) {
-	const error = req.session.message;
-	req.session.message = "";
-	res.render("register", { error });
+	const { user, error } = req.session;
+	req.session.error = "";
+	res.render("register", { user, error });
 }
 
 /** 
@@ -24,12 +24,9 @@ function renderRegisterPage(req, res) {
  * @returns{void}
  */
 function renderLoginPage(req, res) {
-	req.session.user = {};
-
-	const error = req.session.message;
-	req.session.message = "";
-	
-	res.render("login", { error });
+	const { user, error } = req.session;
+	req.session.error = "";
+	res.render("login", { user, error });
 }
 
 /** 
@@ -57,20 +54,20 @@ function register(req, res) {
 	const { username, password, confirm_password, role } = req.body;
 
 	if (!password || !username || !confirm_password || !role) {
-		req.session.message = "Empty fields.";
+		req.session.error = "Empty fields.";
 		res.redirect("/register");
 		return; 
 	}
 
 	if (password != confirm_password) {
-		req.session.message = "Different passwords.";
+		req.session.error = "Different passwords.";
 		res.redirect("/register");
 		return; 
 	}
 
 	// TODO: implement with database operations
 	if (USERS.some(user => user.username == username)) {
-		req.session.message = "Username already taken.";
+		req.session.error = "Username already taken.";
 		res.redirect("/register");
 		return; 
 	}
@@ -102,7 +99,7 @@ function login(req, res) {
 		.find(user => user.username == username && user.password == password);
 
 	if (!user) {
-		req.session.message = "User not found."
+		req.session.error = "User not found."
 		res.redirect("/login");
 		return;
 	}
@@ -124,4 +121,17 @@ function update(req, res) {
 	res.redirect("/profile");
 }
 
-module.exports = { renderRegisterPage, renderLoginPage, renderProfilePage, login, register, update }
+/** 
+ * Logout the user.
+ *
+ * @param{import("express").Request} req - The express request object.
+ * @param{import("express").Response} res - The express response object.
+ *
+ * @returns{void}
+ */
+function logout(req, res) {
+	req.session.destroy();
+	res.redirect("/login");
+}
+
+module.exports = { renderRegisterPage, renderLoginPage, renderProfilePage, login, logout, register, update };
