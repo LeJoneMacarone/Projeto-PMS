@@ -4,41 +4,46 @@
 <body>
     <%- include("./partials/nav_bar.ejs") %>
     <div>
-       <!--Left column-->
-       <div>
-            <img src="data:image/gif;base64,<%= user.image %>" alt="profile">
-       </div>
-       <!--Right column-->
-       <div>
-        <form action="">
-            <label>
-                <span>Username</span>
-                <textarea name="username"><%= user.username %></textarea>
-            </label>
-        </form>
-        
-        <div>
-            <!--Divisor-->
-        </div>
+		<% if (user) { %>
+		   <!--Left column-->
+		   <div>
+				<img src="data:image/gif;base64,<%= user.image %>" alt="profile">
+		   </div>
+		   <!--Right column-->
+		   <div>
+			<form action="">
+				<label>
+					<span>Username</span>
+					<textarea name="username"><%= user.username %></textarea>
+				</label>
+			</form>
+			
+			<div>
+				<!--Divisor-->
+			</div>
 
-        <form action="">
-            <label>
-                <span>Current Password:</span>
-                <input type="text" required>
-            </label>
-            <label>
-                <span>New Password:</span>
-                <input type="text">
-            </label>
-            <label>
-                <span>Confirm New Password:</span>
-                <input type="text">
-            </label>
-            <button type="submit">Change Password</button>
-        </form>
-       </div>
-    </div>
-
+			<form action="">
+				<label>
+					<span>Current Password:</span>
+					<input type="text" required>
+				</label>
+				<label>
+					<span>New Password:</span>
+					<input type="text">
+				</label>
+				<label>
+					<span>Confirm New Password:</span>
+					<input type="text">
+				</label>
+				<button type="submit">Change Password</button>
+			</form>
+			</div>
+		<% } else { %>
+			<div class="alert alert-danger" role="alert">
+				Please login to access this page.
+			</div>	
+		<% } %>
+	</div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>

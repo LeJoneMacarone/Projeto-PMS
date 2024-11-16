@@ -4,7 +4,7 @@
     </div>
 	<% if (user) { %>
 		<div>
-			<% if (user.role.localeCompare("creator") == 0 || user.localeCompare("admin") == 0) { %>
+			<% if (user.role.localeCompare("creator") == 0 || user.role.localeCompare("admin") == 0) { %>
 				<a href="">Campaigns</a>
 			<% } %>
 
