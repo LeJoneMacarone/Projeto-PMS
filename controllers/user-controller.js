@@ -1,4 +1,4 @@
-// TODO: use database models
+// TODO: use database models instead
 const USERS = require("../models/users-model");
 
 /** 
@@ -10,7 +10,9 @@ const USERS = require("../models/users-model");
  * @returns{void}
  */
 function renderRegisterPage(req, res) {
-	// TODO: implement the function
+	const error = req.session.message;
+	req.session.message = "";
+	res.render("register", { user: "", error });
 }
 
 /** 
@@ -22,7 +24,12 @@ function renderRegisterPage(req, res) {
  * @returns{void}
  */
 function renderLoginPage(req, res) {
-	// TODO: implement the function
+	req.session.user = {};
+
+	const error = req.session.message;
+	req.session.message = "";
+	
+	res.render("login", { user: "", error });
 }
 
 /** 
@@ -34,7 +41,8 @@ function renderLoginPage(req, res) {
  * @returns{void}
  */
 function renderProfilePage(req, res) {
-	// TODO: implement the function
+	const user = req.session.user || "";
+	res.render("profile", { user });
 }
 
 /** 
@@ -46,7 +54,36 @@ function renderProfilePage(req, res) {
  * @returns{void}
  */
 function register(req, res) {
-	// TODO: implement the function
+	const { username, password, confirm_password, role } = req.body;
+
+	if (!password || !username || !confirm_password || !role) {
+		req.session.message = "Empty fields.";
+		res.redirect("/register");
+		return; 
+	}
+
+	if (password != confirm_password) {
+		req.session.message = "Different passwords.";
+		res.redirect("/register");
+		return; 
+	}
+
+	// TODO: implement with database operations
+	if (USERS.some(user => user.username == username)) {
+		req.session.message = "Username already taken.";
+		res.redirect("/register");
+		return; 
+	}
+	
+	// TODO: implement with database operations
+	const id = USERS
+		.sort((u1, u2) => u1.id - u2.id)
+		.id + 1;
+	// TODO: use a default profile picture
+	const user = { id, username, password, role, profilePicture: null };
+	USERS.push(user);
+
+	res.redirect("/login");
 }
 
 /** 
@@ -58,7 +95,20 @@ function register(req, res) {
  * @returns{void}
  */
 function login(req, res) {
-	// TODO: implement the function
+	const { username, password } = req.body;
+	
+	// TODO: implement with database operations
+	const user = USERS
+		.find(user => user.username == username && user.password == password);
+
+	if (!user) {
+		req.session.message = "User not found."
+		res.redirect("/login");
+		return;
+	}
+
+	req.session.user = user;
+	res.redirect("/");
 }
 
 /** 
@@ -71,6 +121,7 @@ function login(req, res) {
  */
 function update(req, res) {
 	// TODO: implement the function
+	res.redirect("/profile");
 }
 
 module.exports = { renderRegisterPage, renderLoginPage, renderProfilePage, login, register, update }
