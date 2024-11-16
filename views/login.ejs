@@ -3,6 +3,11 @@
 <%- include("./partials/head.ejs", {title: "Login"});  %>
 <body>
     <%- include("./partials/nav_bar.ejs"); %>
+		<% if (error) {%>
+			<div class="alert alert-danger" role="alert">
+				<%= error %>
+			</div>
+		<% } %>
         <!-- Container where is gonna go the login form -->
         <div>
             <!-- Login title -->
