@@ -32,8 +32,8 @@ app.post("/register", userController.register);
 app.post("/login", userController.login);
 app.post("/logout", userController.logout);
 app.post("/profile", userController.update);
-app.get("/", campaignController.viewCampaigns);
-app.get("/campaign/:id", campaignController.viewCampaign);
+app.get("/", campaignController.renderCampaigns);
+app.get("/campaign/:id", campaignController.renderCampaign);
 
 // Entry point
 app.listen(PORT, () => {

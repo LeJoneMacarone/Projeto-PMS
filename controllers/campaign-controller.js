@@ -1,7 +1,42 @@
-const CAMPAIGNS = require("../models/campaigns-model");
-const USERS = require("../models/users-model");
-const DONATIONS = require("../models/donations-model");
-const UPDATES = require("../models/updates-model");
+const { sequelize } = require("../db/sequelize");
+const { Campaign, CampaignRequest, User, Donation, Update } = require("../db/sequelize").models;
+const CAMPAIGNS_PER_PAGE = 6;
+
+/** 
+ * Request a new camapaign.
+ *
+ * @param{import("express").Request} req - The express request object.
+ * @param{import("express").Response} res - The express response object.
+ *
+ * @returns{void}
+ */
+async function requestCampaign(req, res) {
+	
+}
+
+/** 
+ * Render camapaign requests.
+ *
+ * @param{import("express").Request} req - The express request object.
+ * @param{import("express").Response} res - The express response object.
+ *
+ * @returns{void}
+ */
+async function renderCampaignRequests(req, res) {
+	
+}
+
+/** 
+ * Render a specific camapaign request.
+ *
+ * @param{import("express").Request} req - The express request object.
+ * @param{import("express").Response} res - The express response object.
+ *
+ * @returns{void}
+ */
+async function renderCampaignRequest(req, res) {
+	
+}
 
 /** 
  * Render the campaigns page.
@@ -11,14 +46,15 @@ const UPDATES = require("../models/updates-model");
  *
  * @returns{void}
  */
-function viewCampaigns(req, res) {
-	// TODO: dinamically get number page
-	let campaigns = CAMPAIGNS.slice(0,6);
-	campaigns.forEach(campaign => 
-		campaign.creator = USERS.find(user => user.id == campaign.creatorId)
-	);
-
+async function renderCampaigns(req, res) {
 	const { user } = req.session;
+	
+	// TODO: dinamically get the page number
+	const page = 0
+	const campaigns = await Campaign.findAndCountAll({ 
+		limit: page,
+		offset: CAMPAIGNS_PER_PAGE,
+	}).rows || [];
 
 	res.render("register", { user, campaigns });
 }
@@ -31,38 +67,77 @@ function viewCampaigns(req, res) {
  *
  * @returns{void}
  */
-function viewCampaign(req, res) {
+async function renderCampaign(req, res) {
 	const id = req.params["id"];
+
+	const campaign = Campaign.findOne({ 
+		where: { id },
+		include: [{
+			model: User,
+			required: true,
+			as: "creator",
+		}],
+	}) || {};
+
+	const topDonations = User.findAll("value", {
+		where: { campaignId: id },
+		include: [
+			{ model: User, as: "donor", required: true }
+		],
+		group: "userId",
+		order: [sequelize.fn("sum", sequelize.col("value")), "DESC"],
+		limit: 5,
+	});
+
 	
+	/*
 	let campaign = CAMPAIGNS.find(campaign => campaign.id == id);
 
 	campaign.creator = USERS.find(user => user.id == campaign.creatorId);
 
-	const donations = DONATIONS.filter(donation => donation.campaignId != campaign.id);
-	campaign.totalDonated = donations.reduce((previous, current) => previous + current);
+	const donations = DONATIONS.filter(donation => donation.campaignId == campaign.id);
+	campaign.totalDonated = donations
+		.map(donation => donation.value)
+		.reduce((accumulator, current) => accumulator + current);
 
 	campaign.topDonors = [];
 	campaign.newDonors = [];
 	
-	const topDonations = donations.sort((d1, d2) => d1.value - d2.value).slice(0, 4);
-	topDonations.forEach(donation => {
-		let user = USERS.find(user => user.id == donation.donorId);
-		user.amountDonated = donation.value;
-		campaign.topDonors.push(user);
+	const accumulatedDonations = new Map();
+
+	donations.forEach(({ donorId, value }) => {
+		const donationValue = accumulatedDonations.get(donorId) || 0;
+		accumulatedDonations.set(donorId, donationValue + value);
 	});
 
-	const newDonations = donations.sort((d1, d2) => d1.value - d2.value).slice(0, 4);
-	newDonations.forEach(donation => {
-		let user = USERS.find(user => user.id == donation.donorId);
-		user.amountDonated = donation.value;
+	for (const [donorId, totalDonated] of accumulatedDonations) {
+		if (campaign.topDonors.length == 5) break;
+
+		let user = Object.assign({}, USERS.find(user => user.id == donorId));
+		user.amountDonated = totalDonated;
+		campaign.topDonors.push(user);
+	}
+
+	donations.sort((d1, d2) => d1.date.getTime() - d2.date.getTime());
+
+	const latestDonations = new Map();
+
+	for (const donation of donations) {
+		if (latestDonations == 5) break;
+		latestDonations.set(donation.donorId, donation.id);
+	}
+
+	for (const [donorId, id] of latestDonations) {
+		let user = Object.assign({}, USERS.find(user => user.id == donorId));
+		user.amountDonated = DONATIONS.find(donation => donation.id = id).value;
 		campaign.newDonors.push(user);
-	});
+	}
 
 	campaign.updates = UPDATES.filter(update => update.campaignId == id)
-
+	*/
+	
 	const { user } = req.session;
-
 	res.render("campaign", { user, campaign });
 }
 
-module.exports = { viewCampaigns, viewCampaign }
+module.exports = { renderCampaigns, renderCampaign }
