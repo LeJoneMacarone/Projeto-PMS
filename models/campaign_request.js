@@ -7,15 +7,14 @@ module.exports = (sequelize) => {
             primaryKey: true,
             autoIncrement: true,
         },
-        creationDate: {
-            type: DataTypes.DATE,
-            allowNull: false,
-        },
         status: { // needs to be re-evaluated which implies rejecting a request
             type: DataTypes.ENUM('Pending', 'Approved', 'Rejected'),
             allowNull: false,
             defaultValue: 'Pending',
         },
+    }, {
+        freezeTableName: true,
+        timestamps: true
     });
 
     return CampaignRequest;

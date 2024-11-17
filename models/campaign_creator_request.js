@@ -11,10 +11,6 @@ module.exports = (sequelize) => {
             type: DataTypes.BLOB,
             allowNull: false,
         },
-        creationDate: {
-            type: DataTypes.DATE,
-            allowNull: false,
-        },
         status: { // needs to be re-evaluated which implies rejecting a request
             type: DataTypes.ENUM('Pending', 'Accepted', 'Rejected'),
             allowNull: false,
@@ -28,6 +24,9 @@ module.exports = (sequelize) => {
             },
             allowNull: false,
         },
+    }, {
+        freezeTableName: true,
+        timestamps: true
     });
 
     CampaignCreatorRequest.associate = (models) => {

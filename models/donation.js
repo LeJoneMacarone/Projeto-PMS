@@ -11,10 +11,6 @@ module.exports = (sequelize) => {
             type: DataTypes.DECIMAL(10, 2),  // 10 digits total, 8 before and 2 after '.'
             allowNull: false,
         },
-        date: {
-            type: DataTypes.DATE,
-            allowNull: false,
-        },
         campaign_id: {
             type: DataTypes.INTEGER,
             references: {
@@ -31,6 +27,9 @@ module.exports = (sequelize) => {
             },
             allowNull: false,
         },
+    }, {
+        freezeTableName: true,
+        timestamps: true
     });
 
     Donation.associate = (models) => {

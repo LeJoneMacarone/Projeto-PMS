@@ -1,8 +1,12 @@
 const fs = require("fs")
 const express = require("express");
-const sequelize = require("./db/sequelize");
+const { Report } = require('./db/sequelize').models;
+const reportRoutes = require('./routes/report-routes');
 
 const app = express();
+app.use(express.json());
+
+app.use('/reports', reportRoutes);
 
 const PORT = 3000;
 
