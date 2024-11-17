@@ -6,7 +6,7 @@
     <div id="container">
         <!-- Right column -->
         <div>
-            <% if(user.localeCompare("donor") == 0) { %>
+            <% if(user && user.role.localeCompare("donor") == 0) { %>
                 <button id="btn_donate">Donate</button>
             <% } %>
             
@@ -14,11 +14,11 @@
                 <h4>Donated money:</h4>
                 <p>**till this moment</p>
                 <div>
-                    <%= campaign.money_donated %> €
+                    <%= campaign.totalDonated %> €
                 </div>
             </div>
             
-            <%= if(campaign.topDonors.length > 0) { %>
+            <% if(campaign.topDonors.length > 0) { %>
                 <div>
                     <h4>Top 5 donors:</h4>
                     <p>**till this moment</p>
@@ -32,7 +32,7 @@
                                 </div>
                                 <div>
                                     <!-- Total money donated of this donor for this campaign -->
-                                    <% donor.money_donated %> €
+                                    <%= donor.amountDonated %> €
                                 </div>
                             </div>
                         <% }); %>
@@ -53,11 +53,11 @@
                                 </div>
                                 <div>   
                                     <!-- Quantity of money donated on that new donation -->
-                                    <% donor.money_donated %> €
+                                    <% donor.amountDonated %> €
                                 </div>
                             </div>
                         </div>
-                    <% } %>
+                    <% }); %>
                 </div>
             <% } %>
         </div>
@@ -75,10 +75,11 @@
             <div>
                 <%= campaign.description %>
             </div>
-                <% campaign.media.forEach((media,i) => { %>
+			<% if (campaign.media) { %>
+                <% campaign.media.forEach((media, i) => { %>
                     <img src="data:image/gif;base64,<%= media %>" alt="media <%= i %>">
                 <% }); %>
-            
+			<% } %>
             <div>
                 <!--Divisor-->
             </div>
@@ -88,15 +89,15 @@
             <div>
                 <% campaign.updates.forEach((update) => { %>
                     <div>
-                        <p><%= update.date %></p>
+                        <p><%= update.publication %></p>
                         <div>
                             <% if(typeof update.image === "string" && update.image.length > 0) { %>
                                 <img src="data:image/gif;base64,<%= update.image %>" alt="update">
                             <% } %>
-                            <div><%= update.description %></div>
+                            <div><%= update.content %></div>
                         </div>
                     </div>
-                <% } %>
+                <% }); %>
             </div>
         </div>
     </div>

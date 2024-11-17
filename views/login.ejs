@@ -3,11 +3,16 @@
 <%- include("./partials/head.ejs", {title: "Login"});  %>
 <body>
     <%- include("./partials/nav_bar.ejs"); %>
+		<% if (error) {%>
+			<div class="alert alert-danger" role="alert">
+				<%= error %>
+			</div>
+		<% } %>
         <!-- Container where is gonna go the login form -->
         <div>
             <!-- Login title -->
             <h3>Login</h3>
-            <form action="login.ejs" method="POST">
+            <form action="" method="POST">
                 <!-- Username and password inputs -->
                 <div>
                     <label for="username">Username</label>
