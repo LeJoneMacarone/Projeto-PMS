@@ -1,5 +1,6 @@
 const fs = require("fs")
 const express = require("express");
+const sequelize = require("./db/sequelize");
 
 const app = express();
 
