@@ -44,7 +44,7 @@ module.exports = (sequelize) => {
             allowNull: true,
         },
 
-        campaign_request_id: { // null if request expired after being accepted (?)
+        campaignRequestId: { // null if request expired after being accepted (?)
             type: DataTypes.INTEGER,
             references: {
                 model: 'CampaignRequest',
@@ -65,8 +65,8 @@ module.exports = (sequelize) => {
         });
 
         Campaign.belongsTo(models.CampaignRequest, {
-            foreignKey: 'campaign_request_id',
-            as: 'campaign_request',
+            foreignKey: 'campaignRequestId',
+            as: 'campaignRequest',
         });
     };
 

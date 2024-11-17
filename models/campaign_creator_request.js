@@ -20,7 +20,7 @@ module.exports = (sequelize) => {
             allowNull: false,
             defaultValue: 'Pending',
         },
-        campaign_creator_id: {
+        campaignCreatorId: {
             type: DataTypes.INTEGER,
             references: {
                 model: 'User',
@@ -32,8 +32,8 @@ module.exports = (sequelize) => {
 
     CampaignCreatorRequest.associate = (models) => {
         CampaignCreatorRequest.belongsTo(models.User, {
-            foreignKey: 'campaign_creator_id',
-            as: 'campaign_creator',
+            foreignKey: 'campaignCreatorId',
+            as: 'campaignCreator',
         });
     };
 

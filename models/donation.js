@@ -15,7 +15,7 @@ module.exports = (sequelize) => {
             type: DataTypes.DATE,
             allowNull: false,
         },
-        campaign_id: {
+        campaignId: {
             type: DataTypes.INTEGER,
             references: {
                 model: 'Campaign',
@@ -23,7 +23,7 @@ module.exports = (sequelize) => {
             },
             allowNull: false,
         },
-        donor_id: {
+        donorId: {
             type: DataTypes.INTEGER,
             references: {
                 model: 'User',
@@ -35,11 +35,11 @@ module.exports = (sequelize) => {
 
     Donation.associate = (models) => {
         Donation.belongsTo(models.Campaign, {
-            foreignKey: 'campaign_id',
+            foreignKey: 'campaignId',
             as: 'campaign',
         });
         Donation.belongsTo(models.User, {
-            foreignKey: 'donor_id',
+            foreignKey: 'donorId',
             as: 'donor',
         });
     };
