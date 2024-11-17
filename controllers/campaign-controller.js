@@ -20,7 +20,7 @@ function viewCampaigns(req, res) {
 
 	const { user } = req.session;
 
-	res.render("home", { user, campaigns });
+	res.render("register", { user, campaigns });
 }
 
 /** 
