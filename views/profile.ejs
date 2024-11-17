@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("./partials/head.ejs", {title: "Profile"});  %>
+<body>
+    <%- include("./partials/nav_bar.ejs") %>
+    <div class="container-md">
+        <h3>Profile</h3>
+        <div class="row">
+            <!--Left column-->
+            <div class="col-md-4 profile-img">
+                <!-- <img src="data:image/gif;base64,<%= user.image %>" alt="profile"> -->
+                <img src="/images/profile.png" alt="profile">
+            </div>
+            <!--Right column-->
+            <div class="col-md-8 user-info">
+                <form action="">
+                    <label class="form-group">
+                        <span>Username</span>
+                        <textarea name="username" class="form-control username-field"><%= user.username %></textarea>
+                    </label>
+                </form>
+                
+                <div class="divisor"></div>
+        
+                <form action="">
+                    <label class="form-group">
+                        <span>Current Password:</span>
+                        <input type="password" class="form-control" required>
+                    </label>
+                    <label class="form-group">
+                        <span>New Password:</span>
+                        <input type="password" class="form-control" required>
+                    </label>
+                    <label class="form-group">
+                        <span>Confirm New Password:</span>
+                        <input type="password" class="form-control" required>
+                    </label>
+                    <button type="submit" class="btn btn-primary submit-btn">Change Password</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
