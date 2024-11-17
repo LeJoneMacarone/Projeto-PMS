@@ -1,5 +1,4 @@
-// TODO: use database models instead
-const USERS = require("../models/users-model");
+const { User } = require("../db/sequelize").models;
 
 /** 
  * Render the register page.
@@ -57,9 +56,9 @@ function renderProfilePage(req, res) {
  *
  * @returns{void}
  */
-function register(req, res) {
+async function register(req, res) {
 	const { username, password, confirm_password, role } = req.body;
-
+		
 	if (!password || !username || !confirm_password || !role) {
 		req.session.error = "Empty fields.";
 		res.redirect("/register");
@@ -72,20 +71,16 @@ function register(req, res) {
 		return; 
 	}
 
-	// TODO: implement with database operations
-	if (USERS.some(user => user.username == username)) {
+	let user = await User.findOne({ where: { username }});
+
+	if (user) {
 		req.session.error = "Username already taken.";
 		res.redirect("/register");
 		return; 
 	}
 	
-	// TODO: implement with database operations
-	const id = USERS
-		.sort((u1, u2) => u1.id - u2.id)
-		.id + 1;
-	// TODO: use a default profile picture
-	const user = { id, username, password, role, profilePicture: null };
-	USERS.push(user);
+	user = { username, password, role, profilePicture: null };
+	await User.create(user);
 
 	res.redirect("/login");
 }
@@ -98,12 +93,10 @@ function register(req, res) {
  *
  * @returns{void}
  */
-function login(req, res) {
+async function login(req, res) {
 	const { username, password } = req.body;
 	
-	// TODO: implement with database operations
-	const user = USERS
-		.find(user => user.username == username && user.password == password);
+	const user = await User.findOne({ where: { username, password }});
 
 	if (!user) {
 		req.session.error = "User not found."
