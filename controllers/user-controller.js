@@ -39,6 +39,13 @@ function renderLoginPage(req, res) {
  */
 function renderProfilePage(req, res) {
 	const { user } = req.session;
+
+	if (!user) {
+		req.session.error = "Log in to access the profile page.";
+		res.redirect("/login"); 
+		return;
+	}
+
 	res.render("profile", { user });
 }
 
