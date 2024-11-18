@@ -1,41 +1,30 @@
 const { sequelize } = require("../db/sequelize");
 const { Campaign, CampaignRequest, User, Donation, Update } = require("../db/sequelize").models;
+
 const CAMPAIGNS_PER_PAGE = 6;
 
 /** 
- * Request a new camapaign.
+ * Create a campaign.
  *
  * @param{import("express").Request} req - The express request object.
  * @param{import("express").Response} res - The express response object.
  *
  * @returns{void}
  */
-async function requestCampaign(req, res) {
-	
+async function createCampaign(req, res) {
+	// TODO: implement the function
 }
 
 /** 
- * Render camapaign requests.
+ * Render the campaign creation form.
  *
  * @param{import("express").Request} req - The express request object.
  * @param{import("express").Response} res - The express response object.
  *
  * @returns{void}
  */
-async function renderCampaignRequests(req, res) {
-	
-}
-
-/** 
- * Render a specific camapaign request.
- *
- * @param{import("express").Request} req - The express request object.
- * @param{import("express").Response} res - The express response object.
- *
- * @returns{void}
- */
-async function renderCampaignRequest(req, res) {
-	
+async function renderCampaignForm(req, res) {
+	// TODO: implement the function
 }
 
 /** 
