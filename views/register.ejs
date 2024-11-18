@@ -4,19 +4,17 @@
 
     <body>
         <%- include("./partials/nav_bar.ejs"); %>
-            <% /* %>
-                <% if (error) {%>
-                    <div class="alert alert-danger" role="alert">
-                        <%= error %>
-                    </div>
-                <% } %>
-            <% */ %>
+			<% if (error) { %>
+				<div class="alert alert-danger" role="alert">
+					<%= error %>
+				</div>
+			<% } %>
             <div class="d-flex justify-content-center align-items-center mt-5">
                 <div class="card p-4 mb-3"
                     style="width: 450px; border-radius: 50px; background-color: #d9d9d9; border: none; position: relative;">
                     <div class="card-body">
                         <h3 class="text-center mb-4">Sign up</h3>
-                        <form action="" method="POST">
+                        <form method="POST">
                             <!-- Role selection -->
                             <p class="fw-bold">Role</p>
                             <div class="mb-3">
