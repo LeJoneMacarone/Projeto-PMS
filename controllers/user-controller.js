@@ -99,7 +99,7 @@ async function login(req, res) {
 	const user = await User.findOne({ where: { username, password }});
 
 	if (!user) {
-		req.session.error = "User not found."
+		req.session.error = "User not found.";
 		res.redirect("/login");
 		return;
 	}

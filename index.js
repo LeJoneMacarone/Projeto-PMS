@@ -3,11 +3,11 @@ const express = require("express");
 const session = require("express-session");
 
 // Routes
-const reportRoutes = require('./routes/report-routes');
+const userRoutes = require("./routes/user-routes.js");
+const reportRoutes = require("./routes/report-routes");
 
 // Controllers
 const campaignController = require("./controllers/campaign-controller");
-const userController = require("./controllers/user-controller.js")
 
 // Variables
 const PORT = 3000;
@@ -15,8 +15,6 @@ const ONEDAY = 24 * 60 * 60 * 1000;
 const SECRET = "secret"
 const app = express();
 app.use(express.json());
-
-app.use('/reports', reportRoutes);
 
 // Config
 app.set('views', `${__dirname}/views`);
@@ -31,13 +29,8 @@ app.use(session({
 }));
 
 // Routes
-app.get("/register", userController.renderRegisterPage);
-app.get("/login", userController.renderLoginPage);
-app.get("/profile", userController.renderProfilePage);
-app.post("/register", userController.register);
-app.post("/login", userController.login);
-app.post("/logout", userController.logout);
-app.post("/profile", userController.update);
+app.use("/", userRoutes);
+app.use("/reports", reportRoutes);
 app.get("/", campaignController.renderCampaigns);
 app.get("/campaign/:id", campaignController.renderCampaign);
 
