@@ -50,8 +50,11 @@ module.exports = (sequelize) => {
                 model: 'CampaignRequest',
                 key: 'id',
             },
-            allowNull: true, 
+            allowNull: true,
         },
+    }, {
+        freezeTableName: true,
+        timestamps: true
     });
     Campaign.associate = (models) => {
         Campaign.belongsTo(models.User, {

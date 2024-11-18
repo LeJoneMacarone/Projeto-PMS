@@ -2,6 +2,9 @@
 const express = require("express");
 const session = require("express-session");
 
+// Routes
+const reportRoutes = require('./routes/report-routes');
+
 // Controllers
 const campaignController = require("./controllers/campaign-controller");
 const userController = require("./controllers/user-controller.js")
@@ -11,6 +14,9 @@ const PORT = 3000;
 const ONEDAY = 24 * 60 * 60 * 1000;
 const SECRET = "secret"
 const app = express();
+app.use(express.json());
+
+app.use('/reports', reportRoutes);
 
 // Config
 app.set('views', `${__dirname}/views`);

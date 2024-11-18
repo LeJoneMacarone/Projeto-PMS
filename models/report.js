@@ -27,6 +27,9 @@ module.exports = (sequelize) => {
             },
             allowNull: false,
         },
+    }, {
+        freezeTableName: true,
+        timestamps: true
     });
 
     Report.associate = (models) => {

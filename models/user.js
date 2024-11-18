@@ -24,6 +24,9 @@ module.exports = (sequelize) => {
             type: DataTypes.ENUM('administrator','campaign_creator','donor'), //needs to be properly defined
             allowNull: false,
         },
+    }, {
+        freezeTableName: true,
+        timestamps: true
     });
 
     return User;

@@ -15,10 +15,6 @@ module.exports = (sequelize) => {
             type: DataTypes.BLOB,
             allowNull: true, // This field can be null if no files are uploaded
         },
-        publicationDate: {
-            type: DataTypes.DATE,
-            allowNull: false,
-        },
         campaignId: {
             type: DataTypes.INTEGER,
             references: {
@@ -27,6 +23,9 @@ module.exports = (sequelize) => {
             },
             allowNull: false,
         },
+    }, {
+        freezeTableName: true,
+        timestamps: true
     });
 
     CampaignUpdate.associate = (models) => {
