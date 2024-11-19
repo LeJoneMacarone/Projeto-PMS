@@ -3,18 +3,15 @@ const express = require("express");
 const session = require("express-session");
 
 // Routes
-const userRoutes = require("./routes/user-routes.js");
+const userRoutes = require("./routes/user-routes");
+const campaignRoutes = require("./routes/campaign-routes");
 const reportRoutes = require("./routes/report-routes");
-
-// Controllers
-const campaignController = require("./controllers/campaign-controller");
 
 // Variables
 const PORT = 3000;
 const ONEDAY = 24 * 60 * 60 * 1000;
 const SECRET = "secret"
 const app = express();
-app.use(express.json());
 
 // Config
 app.set('views', `${__dirname}/views`);
@@ -30,9 +27,8 @@ app.use(session({
 
 // Routes
 app.use("/", userRoutes);
+app.use("/campaigns", campaignRoutes);
 app.use("/reports", reportRoutes);
-app.get("/", campaignController.renderCampaigns);
-app.get("/campaign/:id", campaignController.renderCampaign);
 
 // Entry point
 app.listen(PORT, () => {
