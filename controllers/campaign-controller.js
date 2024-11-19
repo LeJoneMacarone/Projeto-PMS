@@ -56,12 +56,13 @@ async function renderCampaigns(req, res) {
 	
 	// TODO: dinamically get the page number
 	const page = 0
-	const campaigns = await Campaign.findAndCountAll({ 
-		limit: page,
-		offset: CAMPAIGNS_PER_PAGE,
-	}).rows || [];
+	const campaigns = await Campaign.findAll({ 
+		include: [{ model: User, as: "creator" }],
+		limit: CAMPAIGNS_PER_PAGE,
+		offset: page,
+	}) || [];
 
-	res.render("register", { user, campaigns });
+	res.render("home", { user, campaigns });
 }
 
 /** 
@@ -75,7 +76,7 @@ async function renderCampaigns(req, res) {
 async function renderCampaign(req, res) {
 	const id = req.params["id"];
 
-	const campaign = Campaign.findOne({ 
+	const campaign = await Campaign.findOne({ 
 		where: { id },
 		include: [{
 			model: User,
@@ -84,65 +85,64 @@ async function renderCampaign(req, res) {
 		}],
 	}) || {};
 
-	const topDonations = User.findAll("value", {
+	const updates = await CampaignUpdate.findAll({
 		where: { campaignId: id },
-		include: [
-			{ model: User, as: "donor", required: true }
+	});
+
+	const totalDonated = await Donation.sum("value", {
+		where: { campaignId: id },
+	});
+	
+	// TODO: exclude password field
+	// TODO: move to another function
+	const topDonations = await Donation.findAll({
+		include : [{
+			model: User,
+			as: "donor",
+		}],
+		attributes: {
+			include: [
+				[sequelize.fn("SUM", sequelize.col("value")), "totalAmount"]
+			],
+		},
+		where: { campaignId: id },
+		group: "donorId",
+		order: [
+			["totalAmount", "DESC"],
 		],
-		group: "userId",
-		order: [sequelize.fn("sum", sequelize.col("value")), "DESC"],
 		limit: 5,
 	});
 
-	
-	/*
-	let campaign = CAMPAIGNS.find(campaign => campaign.id == id);
-
-	campaign.creator = USERS.find(user => user.id == campaign.creatorId);
-
-	const donations = DONATIONS.filter(donation => donation.campaignId == campaign.id);
-	campaign.totalDonated = donations
-		.map(donation => donation.value)
-		.reduce((accumulator, current) => accumulator + current);
-
-	campaign.topDonors = [];
-	campaign.newDonors = [];
-	
-	const accumulatedDonations = new Map();
-
-	donations.forEach(({ donorId, value }) => {
-		const donationValue = accumulatedDonations.get(donorId) || 0;
-		accumulatedDonations.set(donorId, donationValue + value);
+	// TODO: exclude password field
+	// TODO: move to another function
+	const latestDonations = await Donation.findAll({
+		include: [{
+			model: User,
+			as: "donor",
+		}],
+		group: ["donorId"],
+		order: [
+			["createdAt", "DESC"]
+		],
+		limit: 5,
 	});
 
-	for (const [donorId, totalDonated] of accumulatedDonations) {
-		if (campaign.topDonors.length == 5) break;
-
-		let user = Object.assign({}, USERS.find(user => user.id == donorId));
-		user.amountDonated = totalDonated;
-		campaign.topDonors.push(user);
-	}
-
-	donations.sort((d1, d2) => d1.date.getTime() - d2.date.getTime());
-
-	const latestDonations = new Map();
-
-	for (const donation of donations) {
-		if (latestDonations == 5) break;
-		latestDonations.set(donation.donorId, donation.id);
-	}
-
-	for (const [donorId, id] of latestDonations) {
-		let user = Object.assign({}, USERS.find(user => user.id == donorId));
-		user.amountDonated = DONATIONS.find(donation => donation.id = id).value;
-		campaign.newDonors.push(user);
-	}
-
-	campaign.updates = UPDATES.filter(update => update.campaignId == id)
-	*/
+	const topDonors = topDonations.map(row => { return {
+		id: row.dataValues.donor.dataValues.id,
+		username: row.dataValues.donor.dataValues.username,
+		profile: row.dataValues.donor.dataValues.profilePicture,
+		amountDonated: row.dataValues.totalAmount,
+	}});
 	
+	const latestDonors = latestDonations.map(row => { return {
+		id: row.dataValues.donor.dataValues.id,
+		username: row.dataValues.donor.dataValues.username,
+		profile: row.dataValues.donor.dataValues.profilePicture,
+		amountDonated: row.dataValues.value,
+	}});
+
 	const { user } = req.session;
-	res.render("campaign", { user, campaign });
+	res.render("campaign", { user, campaign, totalDonated, updates, topDonors, latestDonors });
 }
 
-module.exports = { renderCampaigns, renderCampaign }
+module.exports = { renderCampaigns, renderCampaign, renderCampaignForm, createCampaign };
