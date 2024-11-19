@@ -9,7 +9,9 @@ exports.getAllReports = async (req, res) => {
                 { model: User, as: 'reporter' }
             ]
         });
-        res.status(200).json(reports);
+        const { user } = req.session;
+        res.render('admin_validate_reports_view', { user , reports: reports });
+        //res.status(200).json(reports);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -27,7 +29,9 @@ exports.getReportById = async (req, res) => {
         if (!report) {
             return res.status(404).json({ error: 'Report not found' });
         }
-        res.status(200).json(report);
+        const { user } = req.session;
+        res.render('admin_validate_report_info', { user , report: report });
+        //res.status(200).json(report);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -37,7 +41,7 @@ exports.getReportById = async (req, res) => {
 exports.createReport = async (req, res) => {
     try {
         const { description, campaign_id, reporter_id } = req.body;
-        const newReport = await Report.create({ description: description, campaign_id: campaign_id, reporter_id: reporter_id });
+        const newReport = await Report.create({ description: description, campaignId: campaign_id, reporterId: reporter_id });
         res.status(201).json(newReport);
     } catch (error) {
         res.status(500).json({ error: error.message });
