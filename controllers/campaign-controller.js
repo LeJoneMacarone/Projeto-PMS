@@ -1,5 +1,5 @@
 const { sequelize } = require("../db/sequelize");
-const { Campaign, CampaignRequest, User, Donation, Update } = require("../db/sequelize").models;
+const { Campaign, User, Donation, CampaignUpdate } = require("../db/sequelize").models;
 
 const CAMPAIGNS_PER_PAGE = 6;
 
@@ -12,7 +12,15 @@ const CAMPAIGNS_PER_PAGE = 6;
  * @returns{void}
  */
 async function createCampaign(req, res) {
-	// TODO: implement the function
+	// TODO: maybe check if user is actually a creator(?) 
+	
+	const creatorId = req.session.user.id;
+	const { title, description, goal, endDate, iban } = req.body;
+
+	const campaign = { title, description, goal, endDate, iban, creatorId };
+	await Campaign.create(campaign);
+	
+	res.redirect("/campaigns");
 }
 
 /** 
@@ -23,8 +31,16 @@ async function createCampaign(req, res) {
  *
  * @returns{void}
  */
-async function renderCampaignForm(req, res) {
-	// TODO: implement the function
+function renderCampaignForm(req, res) {
+	const { user } = req.session;
+	
+	if (!user || user.role != "campaign_creator") {
+		req.session.error = "Login as a campaign creator to access this page."
+		res.redirect("/login");
+		return;
+	}
+
+	res.render("creator_generate_campaign", { user });
 }
 
 /** 
