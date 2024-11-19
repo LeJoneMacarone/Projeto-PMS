@@ -105,7 +105,7 @@ async function login(req, res) {
 	}
 
 	req.session.user = user;
-	res.redirect("/");
+	res.redirect("/campaigns");
 }
 
 /** 
