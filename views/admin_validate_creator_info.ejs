@@ -29,10 +29,12 @@
         
 
         <div class="d-flex gap-3">
-            <form action="" method="POST">
+            <form action="/campaign_creators/update_status/<%= request.id %>" method="POST">
+                <input type="hidden" name="status" value="Approved">
                 <button type="submit" class="btn btn-success w-100">Approve</button>
             </form>
-            <form action="" method="POST">
+            <form action="/campaign_creators/update_status/<%= request.id %>" method="POST">
+                <input type="hidden" name="status" value="Rejected">
                 <button type="submit" class="btn btn-danger w-100">Reject</button>
             </form>
         </div>

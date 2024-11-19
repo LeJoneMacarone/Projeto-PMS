@@ -27,6 +27,42 @@ exports.getAllPendingCampaignCreatorRequest = async (req, res) => {
     }
 };
 
+exports.updateCampaignCreatorRequestStatus = async (req, res) => {
+    try {
+        const { user } = req.session;
+        const { id } = req.params;
+        const { status } = req.body;
+
+        if (!user) {
+            return res.redirect("/login");
+        }
+
+        if (user.role !== "administrator") {
+            return res.redirect("/login");
+        }
+
+        const request = await CampaignCreatorRequest.findByPk(id, {
+            include: [
+                { model: User, as: 'campaignCreator' }
+            ]
+        });
+
+        if (!request) {
+            return res.status(404).json({ error: 'Request not found' });
+        }
+
+        if (!['Approved', 'Rejected'].includes(status)) {
+            return res.status(400).json({ error: 'Invalid status value' });
+        }
+
+        await request.update({ status });
+
+        res.redirect("/campaign_creators");
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 exports.getCampaignCreatorRequestById = async (req, res) => {
     try {
         const { user } = req.session;

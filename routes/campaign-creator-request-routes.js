@@ -3,13 +3,18 @@ const campaignCreatorRequestController = require('../controllers/campaign-creato
 
 const router = express.Router();
 
-// Route to get all pending reports
+// Route to get all pending campaign creator requests
 router.get('/', campaignCreatorRequestController.getAllPendingCampaignCreatorRequest);
 
-// Route to get a specific report by ID
+// Route to update the status of a campaign creator request
+router.post('/update_status/:id', campaignCreatorRequestController.updateCampaignCreatorRequestStatus);
+
+// Route to get a specific campaign creator request
 router.get('/:id', campaignCreatorRequestController.getCampaignCreatorRequestById);
 
-// Route to delete a report by ID
+// Route to delete a campaign creator request
 router.delete('/:id', campaignCreatorRequestController.deleteCampaignCreatorRequest);
+
+
 
 module.exports = router;
