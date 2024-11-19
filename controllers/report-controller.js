@@ -3,15 +3,20 @@ const { Report, Campaign, User } = require('../db/sequelize').models;
 // Renders the page with all reports
 exports.getAllReports = async (req, res) => {
     try {
-        const reports = await Report.findAll({
-            include: [
-                { model: Campaign, as: 'campaign' },
-                { model: User, as: 'reporter' }
-            ]
-        });
         const { user } = req.session;
-        res.render('admin_validate_reports_view', { user , reports: reports });
-        //res.status(200).json(reports);
+        if(user.role == "administrator"){
+            const reports = await Report.findAll({
+                include: [
+                    { model: Campaign, as: 'campaign' },
+                    { model: User, as: 'reporter' }
+                ]
+            });
+
+            res.render('admin_validate_reports_view', { user , reports: reports });
+            //res.status(200).json(reports);
+        }else{
+            res.redirect("/login");
+        }
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -20,18 +25,25 @@ exports.getAllReports = async (req, res) => {
 // Renders a specific report by its ID
 exports.getReportById = async (req, res) => {
     try {
-        const report = await Report.findByPk(req.params.id, {
-            include: [
-                { model: Campaign, as: 'campaign' },
-                { model: User, as: 'reporter' }
-            ]
-        });
-        if (!report) {
-            return res.status(404).json({ error: 'Report not found' });
-        }
         const { user } = req.session;
-        res.render('admin_validate_report_info', { user , report: report });
-        //res.status(200).json(report);
+        if(user.role == "administrator"){
+            const report = await Report.findByPk(req.params.id, {
+                include: [
+                    { model: Campaign, as: 'campaign' },
+                    { model: User, as: 'reporter' }
+                ]
+            });
+            
+            if (!report) {
+                return res.status(404).json({ error: 'Report not found' });
+            }
+
+            res.render('admin_validate_report_info', { user , report: report });
+            //res.status(200).json(report);
+        }else{
+            res.redirect("/login");
+        }
+        
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

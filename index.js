@@ -6,6 +6,7 @@ const session = require("express-session");
 const userRoutes = require("./routes/user-routes");
 const campaignRoutes = require("./routes/campaign-routes");
 const reportRoutes = require("./routes/report-routes");
+const campaignCreatorRequestRoutes = require("./routes/campaign-creator-request-routes");
 
 // Variables
 const PORT = 3000;
@@ -29,6 +30,7 @@ app.use(session({
 app.use("/", userRoutes);
 app.use("/campaigns", campaignRoutes);
 app.use("/reports", reportRoutes);
+app.use("/campaign_creators", campaignCreatorRequestRoutes);
 
 // Entry point
 app.listen(PORT, () => {

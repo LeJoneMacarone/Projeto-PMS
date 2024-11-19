@@ -8,16 +8,16 @@
         <p>Here are the new campaign creators that required to be validated.</p>
 
         <div class="row g-4">
-            <% if(creators && creators.length > 0) { 
-                creators.forEach((creator) => { %>
+            <% if(requests && requests.length > 0) { %>
+                <% requests.forEach((request) => { %>
                 <div class="col-12 col-md-6 col-lg-4">
                     <a href="#" class="text-decoration-none text-dark">
                         <div class="card shadow-sm">
                             <div class="card-body text-center">
                                 <img src="/images/profile.png" alt="creator_profile" class="rounded-circle mb-3" style="width: 80px; height: 80px;">
-                                <h5 class="card-title mb-2"><%= creator.username %></h5>
+                                <h5 class="card-title mb-2"><%= request.campaignCreator.username %></h5>
                                 <p class="card-text text-muted">Validate this creator</p>
-                                <button class="btn btn-primary">Validate</button>
+                                <button class="btn btn-primary" onclick="window.location.href='/campaign_creators/<%= request.id %>'">Validate</button>
                             </div>
                         </div>
                     </a>
