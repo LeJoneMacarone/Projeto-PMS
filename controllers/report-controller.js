@@ -89,7 +89,7 @@ exports.deleteReport = async (req, res) => {
             return res.status(404).json({ error: 'Report not found' });
         }
         await report.destroy();
-        res.status(204).send();
+        res.redirect("/reports");
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

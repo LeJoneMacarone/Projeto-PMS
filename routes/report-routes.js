@@ -13,6 +13,6 @@ router.get('/:id', reportController.getReportById);
 router.post('/', reportController.createReport);
 
 // Route to delete a report by ID
-router.delete('/:id', reportController.deleteReport);
+router.post('/delete/:id', reportController.deleteReport);
 
 module.exports = router;

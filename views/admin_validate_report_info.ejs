@@ -14,13 +14,11 @@
                     style="max-width: 700px; margin: 0 auto;">
                     <h1>Report</h1>
                     <div>
-                        <form action="" class="d-inline-block me-2">
-                            <button type="submit" class="btn btn-outline-secondary">Eliminate Campaign</button>
+                        <form action="/reports/delete/<%= report.id %>" method="POST" class="d-inline-block me-2">
+                            <button type="submit" class="btn btn-outline-secondary">Ignore Report</button>
                         </form>
                         <form action="" class="d-inline-block">
-                            <button type="submit" class="btn btn-success rounded-pill px-4 py-2">
-                                Hide Campaign
-                            </button>
+                            <button type="submit" class="btn btn-success rounded-pill px-4 py-2">Delete Campaign</button>
                         </form>
                     </div>
 
