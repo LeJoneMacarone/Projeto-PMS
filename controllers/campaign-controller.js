@@ -1,5 +1,5 @@
 const { sequelize } = require("../db/sequelize");
-const { Campaign, User, Donation, CampaignUpdate } = require("../db/sequelize").models;
+const { Campaign, User, Donation, CampaignUpdate, CampaignRequest } = require("../db/sequelize").models;
 
 const CAMPAIGNS_PER_PAGE = 6;
 
