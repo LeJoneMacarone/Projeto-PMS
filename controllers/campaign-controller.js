@@ -57,9 +57,18 @@ async function renderCampaigns(req, res) {
 	// TODO: dinamically get the page number
 	const page = 0
 	const campaigns = await Campaign.findAll({ 
-		include: [{ model: User, as: "creator" }],
-		limit: CAMPAIGNS_PER_PAGE,
-		offset: page,
+		include: [
+			{ 
+				model: User, 
+				as: "creator",
+				required: true,
+			},
+			{ 
+				model: CampaignRequest, 
+				as: "campaignRequest",
+				where: { status: "Approved" },
+			},
+		],
 	}) || [];
 
 	res.render("home", { user, campaigns });
