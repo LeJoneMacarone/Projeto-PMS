@@ -5,6 +5,8 @@ const router = express.Router();
 
 router.get("/", campaignController.renderCampaigns);
 
+router.get("/owned", campaignController.renderCampaignsOfCreator);
+
 router.get("/:id(\\d+)", campaignController.renderCampaign);
 
 router.get("/create", campaignController.renderCampaignForm);
