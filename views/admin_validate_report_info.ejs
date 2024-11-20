@@ -29,10 +29,8 @@
                 <div class="p-4 shadow-sm"
                     style="max-width: 700px; margin: 0 auto; background-color: #d6e8d6; border-radius: 30px;">
                     <ul class="list-unstyled mb-0">
-                        <% if (report.campaign) { %> <!-- TODO remove this and '}' when creating report is done-->
-                            <li class="mb-2"><b>→ Title:</b><a href="/campaign/<%= report.campaign.id %>" class="text-decoration-none text-success"> <%= report.campaign.title %></a></li>
-                            <li class="mb-2"><b>→ Creator:</b><%= report.campaign.creator.username %></li>
-                        <% } %>
+                        <li class="mb-2"><b>→ Title:</b><a href="/campaign/<%= report.campaign.id %>" class="text-decoration-none text-success"> <%= report.campaign.title %></a></li>
+                        <li class="mb-2"><b>→ Creator:</b><%= report.campaign.creator.username %></li>
                         <li class="mb-2"><b>→ Reported by:</b> <%= report.reporter.username %></li>
                         <li><b>→ Reasons:</b> <%= report.description %></li>
                     </ul>
