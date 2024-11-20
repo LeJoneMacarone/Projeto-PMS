@@ -12,13 +12,13 @@
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mr-auto">
-                    <% if(user.role.localeCompare("creator") == 0 || user.role.localeCompare("admin") == 0) { %>
+                    <% if (user.role.localeCompare("campaign_creator") == 0 || user.role.localeCompare("administrator") == 0) { %>
                         <li class="nav-item h5">
                             <a href="" class="nav-link">Campaigns</a>
                         </li>
                     <% } %>
 
-                    <% if(user.role.localeCompare("admin") == 0) { %>
+                    <% if (user.role.localeCompare("administrator") == 0) { %>
                         <li class="nav-item h5">
                             <a href="" class="nav-link">Campaigns Creators</a>
                         </li>
@@ -28,7 +28,7 @@
 
                     <% } %>
 
-                    <% if(user.role.localeCompare("root_admin") == 0) { %>
+                    <% if (user.role.localeCompare("root_administrator") == 0) { %>
                         <li class="nav-item h5">
                             <a href="" class="nav-link">Add Admins</a>
                         </li>

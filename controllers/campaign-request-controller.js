@@ -1,13 +1,25 @@
+const { Campaign, CampaignRequest, User } = require("../db/sequelize.js").models;
+
 /** 
- * Request a new camapaign.
+ * Updates a campaign request status to either accepted or rejected.
  *
  * @param{import("express").Request} req - The express request object.
  * @param{import("express").Response} res - The express response object.
  *
  * @returns{void}
  */
-async function requestCampaign(req, res) {
-	// TODO: implement this function
+async function updateCampaignRequestStatus(req, res) {
+	const { user } = req.session;
+	const { campaignRequestId, status } = req.body;
+
+	console.log({ validatorId: user.id, campaignRequestId, status });
+
+	// TODO: check status before updating
+
+	await Campaign.update({ validatorId: user.id }, { where : { campaignRequestId }});
+	await CampaignRequest.update({ status }, { where: { id: campaignRequestId }});
+	
+	res.redirect("/requests/campaigns");
 }
 
 /** 
@@ -19,11 +31,34 @@ async function requestCampaign(req, res) {
  * @returns{void}
  */
 async function renderCampaignRequests(req, res) {
-	// TODO: implement this function
+	const { user } = req.session;
+
+	if (!user || user.role != "administrator") {
+		req.session.error = "Login as administrator to access this feature";
+		res.redirect("/login");
+		return;
+	}
+
+	const campaigns = await Campaign.findAll({
+		include: [{
+			model: CampaignRequest,
+			as: "campaignRequest",
+			required: true,
+			where: { 
+				status: "Pending",
+			},
+		},{
+			model: User,
+			as: "creator",
+			required: true,
+		}],
+	});
+
+	res.render("admin_validate_campaigns_view", { user, campaigns });
 }
 
 /** 
- * Render a specific camapaign request.
+ * Render a specific camapaign request, based on the specified id.
  *
  * @param{import("express").Request} req - The express request object.
  * @param{import("express").Response} res - The express response object.
@@ -33,3 +68,5 @@ async function renderCampaignRequests(req, res) {
 async function renderCampaignRequest(req, res) {
 	// TODO: implement this function
 }
+
+module.exports = { renderCampaignRequests, renderCampaignRequest, updateCampaignRequestStatus };
