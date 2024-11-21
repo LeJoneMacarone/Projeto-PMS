@@ -103,6 +103,7 @@ async function register(req, res) {
 async function login(req, res) {
 	const { username, password } = req.body;
 	
+	// TODO: exclude password field for security
 	const user = await User.findOne({ where: { username, password }});
 
 	if (!user) {
@@ -113,17 +114,21 @@ async function login(req, res) {
 
 	req.session.user = user;
 
-	if(user.role == 'donor'){
-		res.redirect("/campaigns");
-	}else if(user.role == 'campaign_creator'){
-		res.redirect("/campaigns/create");
-	}else if(user.role == 'administrator'){
-		res.render("admin_validate_campaigns_view", {user}); //TODO redirect when the route to admin pages is done
-	}else if(user.role == 'root_admin'){
-		res.render("admin_create_new_admin", {user}); //TODO redirect when the route to admin pages is done
-	}else{
-		console.log("User with id "+ user.id +" should be deleted because he has an invalid role: '"+ user.role+ "'.");
-		res.redirect("/login");
+	switch (user.role) {
+		case "donor":
+			res.redirect("/campaigns");
+			break;
+		case "campaign_creator":
+			res.redirect("/campaigns/create");
+			break
+		case "root_administrator":
+		case "administrator":
+			res.redirect("/requests/campaigns");
+			break
+		default:
+			req.session.error = "User does not have a valid role.";
+			res.redirect("/login");
+			break;
 	}
 }
 
