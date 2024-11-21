@@ -15,7 +15,7 @@
             <% } %>
             
             <div class="donations-info">
-                <% if(user && user.localCompare("donor") == 0){ %>
+                <% if(user && user.role == "donor"){ %>
                     <div class="mb-3">
                         <button type="button" class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#donateModal">
                             Donate
@@ -148,17 +148,14 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     
-                    <form action="" method="">
+                    <form action="/reports" method="POST">
                         <div class="modal-body">
                             <div class="mb-3">
                                 <label for="reportDescription" class="form-label">Report Description</label>
-                                <textarea id="reportDescription" name="description" class="form-control" rows="4" required placeholder="Enter details about the report..."></textarea>
+                                <textarea id="description" name="description" class="form-control" rows="4" required placeholder="Enter details about the report..."></textarea>
                             </div>
-                            
                             <input type="hidden" id="campaignId" name="campaignId" value="<%= campaign.id %>">
-                            <% /* TODO %>
-                                <input type="hidden" id="userId" name="userId" value="<%= user.id %>">
-                            <% */ %>
+                            <input type="hidden" id="userId" name="reporterId" value="<%= user.id %>">
                         </div>
                         
                         <div class="modal-footer">
@@ -171,7 +168,7 @@
         </div>
     <% } %>
 
-    <% if(user && user.localCompare("donor") == 0) { %>
+    <% if(user && user.role == "donor") { %>
         <!-- Donation Modal -->
         <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">

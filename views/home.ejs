@@ -8,7 +8,7 @@
         <!-- Container where is gonna go the campaign preview FOR EACH CAMPAIGN -->
         <div class="row">
             <% campaigns.forEach((campaign) => { %>
-                <a href="" class="col-md-6 col-lg-4 campaign-box">
+                <a href="/campaigns/<%= campaign.id %>" class="col-md-6 col-lg-4 campaign-box">
                     <div>
                         <div>
                             <h3><%= campaign.title %></h3>
@@ -27,11 +27,10 @@
                                 <div class="campaign-description">
                                     <%= campaign.description %>
                                 </div>
-                                
-                                <div>
-									<!-- TODO: add from campaign -->
+								<!-- TODO: add picture from campaign -->
+                                <!-- <div>
                                     <img src="https://images.theconversation.com/files/417128/original/file-20210820-27-j1ro6y.jpg?ixlib=rb-4.1.0&rect=0%2C11%2C3994%2C2640&q=45&auto=format&w=926&fit=clip" alt="campaign-thumbnail">
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                         <div class="campaign-percentage" style="background: linear-gradient(to right, green <%= campaign.donationsPercentage %>%, white <%= campaign.donationsPercentage %>%);"></div>
