@@ -17,7 +17,8 @@ async function createCampaign(req, res) {
 	const creatorId = req.session.user.id;
 	const { title, description, goal, endDate, iban } = req.body;
 
-	const campaign = { title, description, goal, endDate, iban, creatorId };
+	const request = await CampaignRequest.create({ status: "Pending" });
+	const campaign = { title, description, goal, endDate, iban, creatorId, campaignRequestId: request.id };
 	await Campaign.create(campaign);
 	
 	res.redirect("/campaigns");
