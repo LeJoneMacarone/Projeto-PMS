@@ -7,6 +7,7 @@ const userRoutes = require("./routes/user-routes");
 const campaignRoutes = require("./routes/campaign-routes");
 const campaignRequestRoutes = require("./routes/campaign-requests-routes");
 const reportRoutes = require("./routes/report-routes");
+const campaignCreatorRequestRoutes = require("./routes/campaign-creator-request-routes");
 
 // Variables
 const PORT = 3000;
@@ -31,6 +32,7 @@ app.use("/", userRoutes);
 app.use("/campaigns", campaignRoutes);
 app.use("/requests/campaigns", campaignRequestRoutes);
 app.use("/reports", reportRoutes);
+app.use("/campaign_creators", campaignCreatorRequestRoutes);
 
 // Entry point
 app.listen(PORT, () => {
