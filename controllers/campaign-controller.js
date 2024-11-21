@@ -168,6 +168,7 @@ async function renderCampaign(req, res) {
  *
  * @returns{void}
  */
+// FIXME: will only fetch campaigns that have associated donations
 async function renderCampaignsOfCreator(req, res) {
 	const { user } = req.session;
 
@@ -184,6 +185,7 @@ async function renderCampaignsOfCreator(req, res) {
 		include: [{
 			model: Campaign,
 			as: "campaign",
+			where: { creatorId: user.id },
 			include: [{
 				model: CampaignRequest,
 				as: "campaignRequest",
