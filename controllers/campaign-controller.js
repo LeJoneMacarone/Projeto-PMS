@@ -1,5 +1,5 @@
 const { sequelize } = require("../db/sequelize");
-const { Campaign, User, Donation, CampaignUpdate } = require("../db/sequelize").models;
+const { Campaign, User, Donation, CampaignUpdate, CampaignRequest } = require("../db/sequelize").models;
 
 const CAMPAIGNS_PER_PAGE = 6;
 
@@ -57,9 +57,18 @@ async function renderCampaigns(req, res) {
 	// TODO: dinamically get the page number
 	const page = 0
 	const campaigns = await Campaign.findAll({ 
-		include: [{ model: User, as: "creator" }],
-		limit: CAMPAIGNS_PER_PAGE,
-		offset: page,
+		include: [
+			{ 
+				model: User, 
+				as: "creator",
+				required: true,
+			},
+			{ 
+				model: CampaignRequest, 
+				as: "campaignRequest",
+				where: { status: "Approved" },
+			},
+		],
 	}) || [];
 
 	res.render("home", { user, campaigns });
@@ -127,22 +136,80 @@ async function renderCampaign(req, res) {
 		limit: 5,
 	});
 
-	const topDonors = topDonations.map(row => { return {
-		id: row.dataValues.donor.dataValues.id,
-		username: row.dataValues.donor.dataValues.username,
-		profile: row.dataValues.donor.dataValues.profilePicture,
-		amountDonated: row.dataValues.totalAmount,
-	}});
+	const topDonors = topDonations.map(row => { 
+		return {
+			id: row.dataValues.donor.dataValues.id,
+			username: row.dataValues.donor.dataValues.username,
+			profile: row.dataValues.donor.dataValues.profilePicture,
+			amountDonated: row.dataValues.totalAmount,
+		}
+	});
 	
-	const latestDonors = latestDonations.map(row => { return {
-		id: row.dataValues.donor.dataValues.id,
-		username: row.dataValues.donor.dataValues.username,
-		profile: row.dataValues.donor.dataValues.profilePicture,
-		amountDonated: row.dataValues.value,
-	}});
+	const latestDonors = latestDonations.map(row => { 
+		return {
+			id: row.dataValues.donor.dataValues.id,
+			username: row.dataValues.donor.dataValues.username,
+			profile: row.dataValues.donor.dataValues.profilePicture,
+			amountDonated: row.dataValues.value,
+		}
+	});
 
 	const { user } = req.session;
 	res.render("campaign", { user, campaign, totalDonated, updates, topDonors, latestDonors });
 }
 
-module.exports = { renderCampaigns, renderCampaign, renderCampaignForm, createCampaign };
+/** 
+ * Render the campaigns owned by the current loggedd user. Returns to the 
+ * login screen if the user is not a creator.
+ *
+ * @param{import("express").Request} req - The express request object.
+ * @param{import("express").Response} res - The express response object.
+ *
+ * @returns{void}
+ */
+async function renderCampaignsOfCreator(req, res) {
+	const { user } = req.session;
+
+	if (!user || user.role != "campaign_creator") {
+		req.session.error = "Login as a campaign creator to access this page.";
+		res.redirect("/login");
+		return;
+	}
+
+	const data = await Donation.findAll({
+		attributes: [
+			[sequelize.fn("SUM", sequelize.col("Donation.value")), "totalDonated"]
+		],
+		include: [{
+			model: Campaign,
+			as: "campaign",
+			include: [{
+				model: CampaignRequest,
+				as: "campaignRequest",
+			}],
+		}],
+		group: "campaignId",
+	}) || [];
+
+	console.log(data);
+
+	const campaigns = data.map(({ dataValues }) => {
+		return {
+			id: dataValues.campaign.dataValues.id,
+			title: dataValues.campaign.dataValues.title,
+			goal: dataValues.campaign.dataValues.goal,
+			status: dataValues.campaign.dataValues.campaignRequest.dataValues.status,
+			totalDonated: dataValues.totalDonated,
+		}
+	});
+
+	res.render("creator_campaigns_on", { user, campaigns });
+}
+
+module.exports = { 
+	renderCampaigns, 
+	renderCampaignsOfCreator, 
+	renderCampaign, 
+	renderCampaignForm, 
+	createCampaign 
+};

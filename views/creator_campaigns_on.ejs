@@ -4,13 +4,15 @@
 <body>
     <%- include("./partials/nav_bar.ejs") %>
     <div class="container-md">
-        <%- include("./partials/creator_opt_bar.ejs") %>
+		<!-- TODO: uncomment after implementing a way to filter campaigns by status -->
+        <%- /* include("./partials/creator_opt_bar.ejs") */ %>
         <div class="table-responsive-md">
             <table class="table table-bordered table align-middle table-striped custom-table">
                 <tr>
                     <th>Title</th>
                     <th>Goal</th>
                     <th>Money Donated (%)</th>
+                    <th>Status</th>
                     <th>Actions</th>
                 </tr>
     
@@ -19,7 +21,8 @@
                         <td><a href="" class="h6"><%= campaign.title %></a></td>
                         <td><%= campaign.goal %> €</td>
                         <!--Campaign percentage of money donated-->
-                        <td><%= campaign.donations_percentage %> %</td>
+                        <td><%= campaign.totalDonated * 100 / campaign.goal %> %</td>
+                        <td><%= campaign.status %></td>
                         <td class="actions-elm">
                             <form action="">
                                 <button type="submit"></button>
