@@ -16,9 +16,7 @@
                                 <div class="p-4 position-relative"
                                     style="max-width: 700px; background-color: #d6e8d6; border-radius: 30px;">
                                     <div>
-                                        <% if (report.campaign) { %> <!-- TODO remove this and '}' when creating report is done-->
                                         <h3 class="mb-3"><%= report.campaign.title %></h3>
-                                        <% } %>
                                         <p class="mb-3 fw-bold">Reported by: <span class="fw-normal"><%= report.reporter.username %>
                                                 (<%= report.reporter.role %>)</span>
                                         </p>

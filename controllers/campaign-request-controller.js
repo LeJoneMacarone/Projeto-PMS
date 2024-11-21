@@ -16,9 +16,9 @@ async function updateCampaignRequestStatus(req, res) {
 
 	// TODO: check status before updating
 
-	await Campaign.update({ validatorId: user.id }, { where : { campaignRequestId }});
-	await CampaignRequest.update({ status }, { where: { id: campaignRequestId }});
-	
+	await Campaign.update({ validatorId: user.id }, { where: { campaignRequestId } });
+	await CampaignRequest.update({ status }, { where: { id: campaignRequestId } });
+
 	res.redirect("/requests/campaigns");
 }
 
@@ -31,12 +31,16 @@ async function updateCampaignRequestStatus(req, res) {
  * @returns{void}
  */
 async function renderCampaignRequests(req, res) {
+
 	const { user } = req.session;
 
-	if (!user || user.role != "administrator") {
-		req.session.error = "Login as administrator to access this feature";
+	if (!user) {
 		res.redirect("/login");
-		return;
+	}
+
+	if (!(user.role == "administrator" || user.role == "root_administrator")) {
+		req.session.error = "Login as administrator or root_administrator to access this feature";
+		res.redirect("/login");
 	}
 
 	const campaigns = await Campaign.findAll({
@@ -44,10 +48,10 @@ async function renderCampaignRequests(req, res) {
 			model: CampaignRequest,
 			as: "campaignRequest",
 			required: true,
-			where: { 
+			where: {
 				status: "Pending",
 			},
-		},{
+		}, {
 			model: User,
 			as: "creator",
 			required: true,
