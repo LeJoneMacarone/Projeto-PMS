@@ -12,7 +12,7 @@ module.exports = (sequelize) => {
             allowNull: false,
         },
         status: { // needs to be re-evaluated which implies rejecting a request
-            type: DataTypes.ENUM('Pending', 'Accepted', 'Rejected'),
+            type: DataTypes.ENUM('Pending', 'Approved', 'Rejected'),
             allowNull: false,
             defaultValue: 'Pending',
         },

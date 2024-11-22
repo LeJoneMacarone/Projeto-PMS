@@ -108,8 +108,7 @@ async function login(req, res) {
 
 	if (!user) {
 		req.session.error = "User not found.";
-		res.redirect("/login");
-		return;
+		return res.redirect("/login");
 	}
 
 	req.session.user = user;
@@ -119,14 +118,43 @@ async function login(req, res) {
 			res.redirect("/campaigns");
 			break;
 		case "campaign_creator":
-			res.redirect("/campaigns/create");
-			break
+			const ccRequest = await CampaignCreatorRequest.findOne({
+				where: { campaignCreatorId: user.id },
+			});
+
+			if(!ccRequest){
+				req.session.error = "User not have a Campaign Creator Request. Contact us to fix your problem.";
+				console.log("Campaign creator "+user.username+" with id "+user.id+"doesn't have a campaign creator request.");
+				res.redirect("/login");
+				break;
+			}
+
+			switch (ccRequest.status) {
+				case "Pending":
+					req.session.error = "Your request to be a campaign creator wasnt validated. Please try again later.";
+					res.redirect("/login");
+					break;
+				case "Approved":
+					res.redirect("/campaigns/create");
+					break
+				case "Rejected":
+					await ccRequest.destroy();
+					await user.destroy();
+					req.session.error = "Your request to be a campaign creator was rejected. Please register again with a valid information/document.";
+					res.redirect("/login");
+					break;
+				default:
+					req.session.error = "User not have a valid status ("+ccRequest.status+") in his Campaign Creator Request. Contact us to fix your problem.";
+					res.redirect("/login");
+					break;
+			}
+			break;
 		case "root_administrator":
 		case "administrator":
 			res.redirect("/requests/campaigns");
 			break
 		default:
-			req.session.error = "User does not have a valid role.";
+			req.session.error = "User does not have a valid role ("+user.role+"). Contact us to fix your problem.";
 			res.redirect("/login");
 			break;
 	}

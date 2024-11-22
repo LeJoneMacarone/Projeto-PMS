@@ -1,7 +1,7 @@
 const { Campaign, CampaignRequest, User } = require("../db/sequelize.js").models;
 
 /** 
- * Updates a campaign request status to either accepted or rejected.
+ * Updates a campaign request status to either approved or rejected.
  *
  * @param{import("express").Request} req - The express request object.
  * @param{import("express").Response} res - The express response object.
