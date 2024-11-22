@@ -44,7 +44,7 @@ module.exports = (sequelize) => {
             allowNull: true,
         },
 
-        campaignRequestId: { // null if request expired after being accepted (?)
+        campaignRequestId: { // null if the logic of the user<->request changes
             type: DataTypes.INTEGER,
             references: {
                 model: 'CampaignRequest',
