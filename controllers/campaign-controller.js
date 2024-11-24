@@ -102,7 +102,7 @@ async function renderCampaign(req, res) {
 
 	const totalDonated = await Donation.sum("value", {
 		where: { campaignId: id },
-	});
+	}) || 0;
 	
 	// TODO: exclude password field
 	// TODO: move to another function
