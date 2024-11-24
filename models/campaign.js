@@ -44,7 +44,7 @@ module.exports = (sequelize) => {
             allowNull: true,
         },
 
-        campaignRequestId: { // null if request expired after being accepted (?)
+        campaignRequestId: { // null if the logic of the user<->request changes
             type: DataTypes.INTEGER,
             references: {
                 model: 'CampaignRequest',
@@ -56,6 +56,7 @@ module.exports = (sequelize) => {
         freezeTableName: true,
         timestamps: true
     });
+
     Campaign.associate = (models) => {
         Campaign.belongsTo(models.User, {
             foreignKey: 'creatorId',
@@ -70,6 +71,11 @@ module.exports = (sequelize) => {
         Campaign.belongsTo(models.CampaignRequest, {
             foreignKey: 'campaignRequestId',
             as: 'campaignRequest',
+        });
+
+        Campaign.hasMany(models.Donation, {
+            foreignKey: 'campaignId',
+            as: 'donations',
         });
     };
 

@@ -103,27 +103,60 @@ async function register(req, res) {
 async function login(req, res) {
 	const { username, password } = req.body;
 	
+	// TODO: exclude password field for security
 	const user = await User.findOne({ where: { username, password }});
 
 	if (!user) {
 		req.session.error = "User not found.";
-		res.redirect("/login");
-		return;
+		return res.redirect("/login");
 	}
 
 	req.session.user = user;
 
-	if(user.role == 'donor'){
-		res.redirect("/campaigns");
-	}else if(user.role == 'campaign_creator'){
-		res.redirect("/campaigns/create");
-	}else if(user.role == 'administrator'){
-		res.render("admin_validate_campaigns_view", {user}); //TODO redirect when the route to admin pages is done
-	}else if(user.role == 'root_admin'){
-		res.render("admin_create_new_admin", {user}); //TODO redirect when the route to admin pages is done
-	}else{
-		console.log("User with id "+ user.id +" should be deleted because he has an invalid role: '"+ user.role+ "'.");
-		res.redirect("/login");
+	switch (user.role) {
+		case "donor":
+			res.redirect("/campaigns");
+			break;
+		case "campaign_creator":
+			const ccRequest = await CampaignCreatorRequest.findOne({
+				where: { campaignCreatorId: user.id },
+			});
+
+			if(!ccRequest){
+				req.session.error = "User not have a Campaign Creator Request. Contact us to fix your problem.";
+				console.log("Campaign creator "+user.username+" with id "+user.id+"doesn't have a campaign creator request.");
+				res.redirect("/login");
+				break;
+			}
+
+			switch (ccRequest.status) {
+				case "Pending":
+					req.session.error = "Your request to be a campaign creator wasnt validated. Please try again later.";
+					res.redirect("/login");
+					break;
+				case "Approved":
+					res.redirect("/campaigns/create");
+					break
+				case "Rejected":
+					await ccRequest.destroy();
+					await user.destroy();
+					req.session.error = "Your request to be a campaign creator was rejected. Please register again with a valid information/document.";
+					res.redirect("/login");
+					break;
+				default:
+					req.session.error = "User not have a valid status ("+ccRequest.status+") in his Campaign Creator Request. Contact us to fix your problem.";
+					res.redirect("/login");
+					break;
+			}
+			break;
+		case "root_administrator":
+		case "administrator":
+			res.redirect("/requests/campaigns");
+			break
+		default:
+			req.session.error = "User does not have a valid role ("+user.role+"). Contact us to fix your problem.";
+			res.redirect("/login");
+			break;
 	}
 }
 
