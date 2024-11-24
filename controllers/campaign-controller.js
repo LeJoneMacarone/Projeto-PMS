@@ -1,4 +1,5 @@
 const { sequelize } = require("../db/sequelize");
+const campaign = require("../models/campaign");
 const { Campaign, User, Donation, CampaignUpdate, CampaignRequest } = require("../db/sequelize").models;
 
 const CAMPAIGNS_PER_PAGE = 6;
@@ -168,7 +169,6 @@ async function renderCampaign(req, res) {
  *
  * @returns{void}
  */
-// FIXME: will only fetch campaigns that have associated donations
 async function renderCampaignsOfCreator(req, res) {
 	const { user } = req.session;
 
@@ -178,32 +178,31 @@ async function renderCampaignsOfCreator(req, res) {
 		return;
 	}
 
-	const data = await Donation.findAll({
-		attributes: [
-			[sequelize.fn("SUM", sequelize.col("Donation.value")), "totalDonated"]
-		],
-		include: [{
-			model: Campaign,
-			as: "campaign",
-			where: { creatorId: user.id },
-			include: [{
+	const data = await Campaign.findAll({
+		attributes: {
+			include: [
+				[sequelize.literal(`COALESCE(SUM("donations"."value"), 0)`), "totalDonated"],
+			],
+		},
+		where: { creatorId: user.id },
+		include: [
+			{
+				model: Donation,
+				as: "donations",
+				attributes: [],
+			},
+			{
 				model: CampaignRequest,
 				as: "campaignRequest",
-			}],
-		}],
-		group: "campaignId",
-	}) || [];
+			}
+		],
+		group: ["Campaign.id"],
+	});
 
-	console.log(data);
-
-	const campaigns = data.map(({ dataValues }) => {
-		return {
-			id: dataValues.campaign.dataValues.id,
-			title: dataValues.campaign.dataValues.title,
-			goal: dataValues.campaign.dataValues.goal,
-			status: dataValues.campaign.dataValues.campaignRequest.dataValues.status,
-			totalDonated: dataValues.totalDonated,
-		}
+	const campaigns = data.map(({ dataValues, campaignRequest }) => {
+		const { id, title, goal, totalDonated } = dataValues;
+		const { status } = campaignRequest;
+		return { id, title, goal, totalDonated, status };
 	});
 
 	res.render("creator_campaigns_on", { user, campaigns });
