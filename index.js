@@ -5,6 +5,7 @@ const session = require("express-session");
 // Routes
 const userRoutes = require("./routes/user-routes");
 const campaignRoutes = require("./routes/campaign-routes");
+const donationRoutes = require("./routes/donation-routes");
 const campaignRequestRoutes = require("./routes/campaign-requests-routes");
 const reportRoutes = require("./routes/report-routes");
 const campaignCreatorRequestRoutes = require("./routes/campaign-creator-request-routes");
@@ -30,6 +31,7 @@ app.use(session({
 // Routes
 app.use("/", userRoutes);
 app.use("/campaigns", campaignRoutes);
+app.use("/donations", donationRoutes);
 app.use("/requests/campaigns", campaignRequestRoutes);
 app.use("/reports", reportRoutes);
 app.use("/campaign_creators", campaignCreatorRequestRoutes);
