@@ -1,6 +1,6 @@
 
 const express = require('express');
-const { uploadDocument } = require('../middlewares/upload');
+const { uploadDocument, multerErrorHandlerIdDocument } = require('../middlewares/upload');
 const userController = require('../controllers/user-controller');
 
 const router = express.Router();
@@ -13,7 +13,7 @@ router.get('/profile', userController.renderRegisterPage);
 
 router.post('/login', userController.login);
 
-router.post('/register', uploadDocument.single('id_document'), userController.register);
+router.post('/register', uploadDocument.single('id_document'), multerErrorHandlerIdDocument , userController.register);
 
 router.get('/logout', userController.logout)
 

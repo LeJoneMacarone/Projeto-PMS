@@ -1,34 +1,47 @@
 const multer = require('multer');
 
-// Configuração de armazenamento na memória (para BLOBs no banco de dados)
 const memoryStorage = multer.memoryStorage();
 
-// Filtro de tipos de arquivos
 const fileFilter = (allowedTypes) => {
     return (req, file, cb) => {
         if (allowedTypes.includes(file.mimetype)) {
-            cb(null, true); // Aceita o arquivo
+            cb(null, true);
         } else {
-            cb(new Error(`Invalid file type. Allowed types: ${allowedTypes.join(', ')}`));
+            const error = new Error(`Invalid file type. Allowed types: ${allowedTypes.join(', ')}`);
+            error.status = 400;
+            return cb(error, false);
         }
     };
 };
 
-// Upload para documentos (ex.: PDFs)
+const idDocument_maxFileSize = 5 * 1024 * 1024; // Máx. 5MB
 const uploadDocument = multer({
     storage: memoryStorage,
-    fileFilter: fileFilter(['application/pdf']), // Apenas PDFs
-    limits: { fileSize: 5 * 1024 * 1024 }, // Máx. 5MB
+    fileFilter: fileFilter(['application/pdf']), // Only PDFs
+    limits: { fileSize: idDocument_maxFileSize }, 
 });
 
-// Upload para imagens (ex.: perfil de usuário)
+const profileImage_maxFileSize = 5 * 1024 * 1024; // Máx. 2MB
 const uploadImage = multer({
     storage: memoryStorage,
-    fileFilter: fileFilter(['image/jpeg', 'image/png']), // Apenas JPEG e PNG
-    limits: { fileSize: 2 * 1024 * 1024 }, // Máx. 2MB
+    fileFilter: fileFilter(['image/jpeg', 'image/png']), // Only JPEG e PNG
+    limits: { fileSize: profileImage_maxFileSize }, 
 });
+
+function multerErrorHandlerIdDocument(err, req, res, next) {
+    if (err instanceof multer.MulterError) {
+        if (err.code === 'LIMIT_FILE_SIZE') {
+            req.session.error = `File is too large. Max allowed size is ${idDocument_maxFileSize / (1024 * 1024)} MB.`;
+        } else {
+            req.session.error = err.message || "An unexpected error occurred during file upload.";
+        }
+        return res.redirect("/register");
+    }
+    next(err);
+}
 
 module.exports = {
     uploadDocument,
     uploadImage,
+    multerErrorHandlerIdDocument,
 };

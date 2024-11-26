@@ -41,7 +41,7 @@ function renderProfilePage(req, res) {
 
 	if (!user) {
 		req.session.error = "Log in to access the profile page.";
-		res.redirect("/login"); 
+		res.redirect("/login");
 		return;
 	}
 
@@ -57,47 +57,48 @@ function renderProfilePage(req, res) {
  * @returns{void}
  */
 async function register(req, res) {
+
 	const { username, password, confirm_password, role } = req.body;
-		
+
 	if (!password || !username || !confirm_password || !role) {
 		req.session.error = "Empty fields.";
 		res.redirect("/register");
-		return; 
+		return;
 	}
 
 	if (password != confirm_password) {
 		req.session.error = "Different passwords.";
 		res.redirect("/register");
-		return; 
+		return;
 	}
 
-	let user = await User.findOne({ where: { username }});
+	let user = await User.findOne({ where: { username } });
 
 	if (user) {
 		req.session.error = "Username already taken.";
 		res.redirect("/register");
-		return; 
+		return;
 	}
-	
+
 	user = { username, password, role, profilePicture: null };
-	
+
 	const file = req.file;
-	if(user.role == "campaign_creator"){
-		// Pega o arquivo processado pelo Multer
+	if (user.role == "campaign_creator") {
 		if (!file) {
-			return res.status(400).json({ error: 'No file uploaded' });
+			req.session.error = "No file uploaded.";
+			res.redirect("/register");
+			return;
 		}
 	}
 
 	await User.create(user);
-	
 
-	if(user.role == "campaign_creator"){
-		user = await User.findOne({ where: { username }});
 
-		// Cria o registro na tabela CampaignCreatorRequest
+	if (user.role == "campaign_creator") {
+		user = await User.findOne({ where: { username } });
+
 		await CampaignCreatorRequest.create({
-			identificationDocument: file.buffer, // Armazena o PDF como um Buffer
+			identificationDocument: file.buffer,
 			campaignCreatorId: user.id,
 		});
 	}
@@ -115,9 +116,9 @@ async function register(req, res) {
  */
 async function login(req, res) {
 	const { username, password } = req.body;
-	
+
 	// TODO: exclude password field for security
-	const user = await User.findOne({ where: { username, password }});
+	const user = await User.findOne({ where: { username, password } });
 
 	if (!user) {
 		req.session.error = "User not found.";
@@ -135,9 +136,9 @@ async function login(req, res) {
 				where: { campaignCreatorId: user.id },
 			});
 
-			if(!ccRequest){
+			if (!ccRequest) {
 				req.session.error = "User not have a Campaign Creator Request. Contact us to fix your problem.";
-				console.log("Campaign creator "+user.username+" with id "+user.id+"doesn't have a campaign creator request.");
+				console.log("Campaign creator " + user.username + " with id " + user.id + "doesn't have a campaign creator request.");
 				res.redirect("/login");
 				break;
 			}
@@ -157,7 +158,7 @@ async function login(req, res) {
 					res.redirect("/login");
 					break;
 				default:
-					req.session.error = "User not have a valid status ("+ccRequest.status+") in his Campaign Creator Request. Contact us to fix your problem.";
+					req.session.error = "User not have a valid status (" + ccRequest.status + ") in his Campaign Creator Request. Contact us to fix your problem.";
 					res.redirect("/login");
 					break;
 			}
@@ -167,7 +168,7 @@ async function login(req, res) {
 			res.redirect("/requests/campaigns");
 			break
 		default:
-			req.session.error = "User does not have a valid role ("+user.role+"). Contact us to fix your problem.";
+			req.session.error = "User does not have a valid role (" + user.role + "). Contact us to fix your problem.";
 			res.redirect("/login");
 			break;
 	}
