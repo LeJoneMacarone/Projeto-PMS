@@ -1,4 +1,4 @@
-const { CampaignUpdate } = require("../db/sequelize.js").models
+const { CampaignUpdate } = require("../utils/sequelize.js").models
 
 /** 
  * Create an update for the campaign.

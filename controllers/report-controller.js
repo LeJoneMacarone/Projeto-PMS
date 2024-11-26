@@ -1,4 +1,4 @@
-const { Report, Campaign, User } = require('../db/sequelize').models;
+const { Report, Campaign, User } = require('../utils/sequelize').models;
 
 // Renders the page with all reports
 exports.getAllReports = async (req, res) => {
