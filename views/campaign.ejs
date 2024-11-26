@@ -125,12 +125,10 @@
                         <p class="mb-0 custom-date"><%= update.publication %></p>
                         <div>
 							<!-- TODO: implement media-->
-                            <% /* if (typeof update.image === "string" && update.image.length > 0) { %>
-                                <img src="data:image/gif;base64,<%= update.image %>" 
-                                     alt="update" 
-                                     class="img-fluid rounded mb-3">
-                            <% } */ %>
-                            <div><%= update.content %></div>
+							<img src="data:image/gif;base64,<%= Buffer.from(update.media).toString("base64") %>" 
+								 alt="update" 
+								 class="img-fluid rounded mb-3">
+                        	<div><%= update.content %></div>
                         </div>
                     </div>
                 <% }); %>
