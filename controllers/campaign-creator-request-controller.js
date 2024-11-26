@@ -95,6 +95,27 @@ exports.getCampaignCreatorRequestById = async (req, res) => {
     }
 };
 
+exports.getIdentificationDocument = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const request = await CampaignCreatorRequest.findByPk(id);
+
+        // Verifica se o registro existe e contém o documento de identificação
+        if (!request || !request.identificationDocument) {
+            return res.status(404).json({ error: 'Document not found' });
+        }
+
+        // Configura o cabeçalho para o tipo de conteúdo PDF
+        res.setHeader('Content-Type', 'application/pdf');
+
+        // Envia o buffer do documento para o navegador do cliente
+        res.send(request.identificationDocument);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'An error occurred' });
+    }
+};
+
 exports.deleteCampaignCreatorRequest = async (req, res) => {
     try {
         const { user } = req.session;
