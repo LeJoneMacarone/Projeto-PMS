@@ -1,6 +1,5 @@
-
 const express = require('express');
-const { uploadDocument, multerErrorHandlerIdDocument } = require('../middlewares/upload');
+const { uploadDocument, multerErrorHandlerIdDocument } = require('../utils/upload');
 const userController = require('../controllers/user-controller');
 
 const router = express.Router();
