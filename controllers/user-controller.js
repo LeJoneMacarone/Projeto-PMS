@@ -80,13 +80,26 @@ async function register(req, res) {
 	}
 	
 	user = { username, password, role, profilePicture: null };
+	
+	const file = req.file;
+	if(user.role == "campaign_creator"){
+		// Pega o arquivo processado pelo Multer
+		if (!file) {
+			return res.status(400).json({ error: 'No file uploaded' });
+		}
+	}
+
 	await User.create(user);
 	
 
 	if(user.role == "campaign_creator"){
 		user = await User.findOne({ where: { username }});
-		const { id_document } = req.body;
-		await CampaignCreatorRequest.create({identificationDocument: id_document  ,campaignCreatorId: user.id});
+
+		// Cria o registro na tabela CampaignCreatorRequest
+		await CampaignCreatorRequest.create({
+			identificationDocument: file.buffer, // Armazena o PDF como um Buffer
+			campaignCreatorId: user.id,
+		});
 	}
 
 	res.redirect("/login");
