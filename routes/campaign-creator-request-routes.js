@@ -12,6 +12,9 @@ router.post('/update_status/:id', campaignCreatorRequestController.updateCampaig
 // Route to get a specific campaign creator request
 router.get('/:id', campaignCreatorRequestController.getCampaignCreatorRequestById);
 
+// Route to get pdf of campaign creator request
+router.get("/:id/document", campaignCreatorRequestController.getIdentificationDocument);
+
 // Route to delete a campaign creator request
 router.delete('/:id', campaignCreatorRequestController.deleteCampaignCreatorRequest);
 

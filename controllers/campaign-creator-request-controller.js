@@ -95,6 +95,24 @@ exports.getCampaignCreatorRequestById = async (req, res) => {
     }
 };
 
+exports.getIdentificationDocument = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const request = await CampaignCreatorRequest.findByPk(id);
+        if (!request || !request.identificationDocument) {
+            return res.status(404).json({ error: 'Document not found' });
+        }
+
+        // Sets the header for the PDF content type
+        res.setHeader('Content-Type', 'application/pdf');
+
+        res.send(request.identificationDocument);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'An error occurred' });
+    }
+};
+
 exports.deleteCampaignCreatorRequest = async (req, res) => {
     try {
         const { user } = req.session;
