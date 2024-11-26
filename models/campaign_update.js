@@ -11,7 +11,8 @@ module.exports = (sequelize) => {
             type: DataTypes.TEXT,
             allowNull: false,
         },
-        multimediaFiles: { // (e.g., images, videos)
+		// TODO: needs to be rethought
+        media: {
             type: DataTypes.BLOB,
             allowNull: true, // This field can be null if no files are uploaded
         },
