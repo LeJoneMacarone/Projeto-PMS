@@ -122,14 +122,13 @@
             <div class="updates">
                 <% updates.forEach((update) => { %>
                     <div class="mb-4 p-3 border rounded shadow-sm">
-                        <p class="mb-0 custom-date"><%= update.publication %></p>
+                        <p class="mb-0 custom-date"><%= update.createdAt %></p>
                         <div>
-							<!-- TODO: implement media-->
-                            <% /* if (typeof update.image === "string" && update.image.length > 0) { %>
-                                <img src="data:image/gif;base64,<%= update.image %>" 
-                                     alt="update" 
-                                     class="img-fluid rounded mb-3">
-                            <% } */ %>
+                            <% if (update.media) { %>
+                                <img src="data:image/gif;base64,<%= Buffer.from(update.media).toString("base64") %>"
+                                    alt="update" 
+                                    class="img-fluid rounded mb-3">
+                            <% } %>
                             <div><%= update.content %></div>
                         </div>
                     </div>

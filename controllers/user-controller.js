@@ -1,4 +1,4 @@
-const { User, CampaignCreatorRequest } = require("../db/sequelize").models;
+const { User, CampaignCreatorRequest } = require("../utils/sequelize").models;
 
 /** 
  * Render the register page.

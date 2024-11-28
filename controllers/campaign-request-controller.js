@@ -1,4 +1,4 @@
-const { Campaign, CampaignRequest, User } = require("../db/sequelize.js").models;
+const { Campaign, CampaignRequest, User } = require("../utils/sequelize.js").models;
 
 /** 
  * Updates a campaign request status to either approved or rejected.

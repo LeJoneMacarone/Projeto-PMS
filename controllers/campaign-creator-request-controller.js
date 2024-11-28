@@ -1,4 +1,4 @@
-const { CampaignCreatorRequest, User } = require('../db/sequelize').models;
+const { CampaignCreatorRequest, User } = require('../utils/sequelize').models;
 
 exports.getAllPendingCampaignCreatorRequest = async (req, res) => {
     try {

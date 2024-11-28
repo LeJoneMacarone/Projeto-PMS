@@ -48,17 +48,21 @@ body{
     border: none;
 }
 
-.actions-elm>button{
+/* .actions-elm>button{
     background: rgba(0, 0, 255, 0.8) url("../images/update.png") center/contain no-repeat;
+    color: white;
+    border-radius: 0.5em;
 }
 
 .actions-elm>form button{
     background: rgba(255, 0, 0, 0.8) url("../images/delete.png") center/contain no-repeat;
+    color: white;
+    border-radius: 0.5em;
 }
 
 .actions-elm button:hover{
     opacity: 0.7;
-}
+} */
 
 .red{
     margin-top: 0;

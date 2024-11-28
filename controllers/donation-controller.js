@@ -1,4 +1,4 @@
-const { Donation } = require("../db/sequelize.js").models;
+const { Donation } = require("../utils/sequelize.js").models;
 
 /** 
  * Create a donation.
