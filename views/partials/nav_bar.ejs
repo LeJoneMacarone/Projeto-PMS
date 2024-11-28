@@ -42,7 +42,13 @@
 			<div class="nav-item dropdown ms-auto  d-none d-lg-flex">
 				<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 					<%/* TODO: check for user profile picture */%>
-					<img src="/images/profile.png" alt="profile"class="rounded-circle profile-icon">
+					<img src=<%= user
+							? user.picture
+                            ? `data:image/gif;base64,${ Buffer.from(user.picture).toString("base64") }` 
+                            : "/images/profile.png" 
+							: "/images/profile.png" %>
+						alt="profile" 
+						class="bg-light rounded-circle profile-icon">
 				</a>
 				<ul class="dropdown-menu">
 					<% if (user) { %>
