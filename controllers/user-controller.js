@@ -152,7 +152,6 @@ async function login(req, res) {
 					res.redirect("/campaigns/create");
 					break
 				case "Rejected":
-					await ccRequest.destroy();
 					await user.destroy();
 					req.session.error = "Your request to be a campaign creator was rejected. Please register again with a valid information/document.";
 					res.redirect("/login");
