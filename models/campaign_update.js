@@ -23,6 +23,7 @@ module.exports = (sequelize) => {
                 key: 'id',
             },
             allowNull: false,
+            onDelete: 'CASCADE',
         },
     }, {
         freezeTableName: true,

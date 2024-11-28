@@ -18,6 +18,7 @@ module.exports = (sequelize) => {
                 key: 'id',
             },
             allowNull: false,
+            onDelete: 'CASCADE',
         },
         reporterId: {
             type: DataTypes.INTEGER,

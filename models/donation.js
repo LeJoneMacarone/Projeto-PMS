@@ -18,6 +18,7 @@ module.exports = (sequelize) => {
                 key: 'id',
             },
             allowNull: false,
+            onDelete: 'CASCADE',
         },
         donorId: {
             type: DataTypes.INTEGER,

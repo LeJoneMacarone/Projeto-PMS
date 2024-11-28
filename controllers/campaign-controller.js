@@ -208,10 +208,18 @@ async function renderCampaignsOfCreator(req, res) {
 	res.render("creator_campaigns_on", { user, campaigns });
 }
 
+async function deleteCampaign(req, res) {
+	const campaign = await Campaign.findByPk(req.params.id);
+	campaign.destroy();
+	res.redirect("/campaigns/owned");
+}
+
+
 module.exports = { 
 	renderCampaigns, 
 	renderCampaignsOfCreator, 
 	renderCampaign, 
 	renderCampaignForm, 
-	createCampaign 
+	createCampaign,
+	deleteCampaign
 };
