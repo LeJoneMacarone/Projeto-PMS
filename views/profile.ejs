@@ -5,42 +5,70 @@
     <%- include("./partials/nav_bar.ejs") %>
     <div class="container-md">
         <h3>Profile</h3>
-        <div class="row">
-            <!--Left column-->
-            <div class="col-md-4 profile-img">
-                <!-- <img src="data:image/gif;base64,<%= user.image %>" alt="profile"> -->
-                <img src="/images/profile.png" alt="profile">
+        <% if (error) {%>
+            <div class="alert alert-danger" role="alert">
+                <%= error %>
             </div>
-            <!--Right column-->
-            <div class="col-md-8 user-info">
-                <form action="">
+        <% } %>
+        <form action="/profile" method="POST" enctype="multipart/form-data" onsubmit="return comparePasswords()">
+            <div class="row">
+                <!--Left column-->
+                <div class="col-md-3">
+                    <div class="profile-img">
+                        <img class="profile-img" alt="profile" src=<%= user.picture
+                            ? `data:image/gif;base64,${ Buffer.from(user.picture).toString("base64") }` 
+                            : "/images/profile.png"%>>
+                    </div>
+                    <label for="form-group">
+                        <span>Profile Picture</span>
+                        <input id="picture" type="file" name="picture" class="form-control" accept="video/*,image/png,image/jpeg">
+                    </label>
+                </div>
+                <!--Right column-->
+                <div class="col-md-8 user-info">
                     <label class="form-group">
                         <span>Username</span>
-                        <textarea name="username" class="form-control username-field"><%= user.username %></textarea>
+                        <textarea name="newUsername" class="form-control username-field"><%= user.username %></textarea>
                     </label>
-                </form>
-                
-                <div class="divisor"></div>
-        
-                <form action="">
+                    <div class="divisor"></div>
                     <label class="form-group">
                         <span>Current Password:</span>
-                        <input type="password" class="form-control" required>
+                        <input type="password" class="form-control" name="currentPassword" required>
                     </label>
                     <label class="form-group">
                         <span>New Password:</span>
-                        <input type="password" class="form-control" required>
+                        <input type="password" class="form-control" name="newPassword" required>
                     </label>
                     <label class="form-group">
                         <span>Confirm New Password:</span>
-                        <input type="password" class="form-control" required>
+                        <input type="password" class="form-control" name="newPasswordConfirmation" required>
                     </label>
-                    <button type="submit" class="btn btn-primary submit-btn">Change Password</button>
-                </form>
+                    <button type="submit" class="btn btn-primary submit-btn">Save Changes</button>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" 
+        crossorigin="anonymous"></script>
+    <script>
+        function comparePasswords() {
+            const newPassword = document
+                .querySelector("input[name='newPassword']")
+                .value;
+            
+            const newPasswordConfirmation = document
+                .querySelector("input[name='newPasswordConfirmation']")
+                .value;
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+            if (newPassword != newPasswordConfirmation) {
+                // TODO: improve the error message
+                alert("Passwords do not match.")
+                return false;
+            }
+
+            return true;
+        }
+        </script>
 </body>
 </html>
