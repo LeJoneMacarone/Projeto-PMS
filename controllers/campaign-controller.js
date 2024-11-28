@@ -1,5 +1,4 @@
 const { sequelize } = require("../utils/sequelize");
-const campaign = require("../models/campaign");
 const { Campaign, User, Donation, CampaignUpdate, CampaignRequest } = require("../utils/sequelize").models;
 
 const CAMPAIGNS_PER_PAGE = 6;
@@ -224,7 +223,11 @@ async function deleteCampaign(req, res) {
 	}
 
 	const campaign = await Campaign.findByPk(req.params.id);
+	const campaignRequest = await CampaignRequest.findByPk(campaign.campaignRequestId);
+	
 	campaign.destroy();
+	campaignRequest.destroy();
+	
 
 
 	if (user.role == "campaign_creator") {
