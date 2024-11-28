@@ -8,11 +8,13 @@ const { CampaignUpdate } = require("../utils/sequelize.js").models
  *
  * @returns{void}
  */
-async function createCampaignUpdate(req, res) {
-	const { campaignId, content } = req.body;
-	const media = req.file.buffer;
+async function createCampaignUpdate(req, res) {	
+	let data = {};
+	data.campaignId = req.body.campaignId;
+	data.content = req.body.content;
+	if (req.file) data.media = req.file.buffer;
 
-	await CampaignUpdate.create({ campaignId, content, media });
+	await CampaignUpdate.create(data);
 
 	res.redirect("/campaigns");
 }

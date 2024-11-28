@@ -24,13 +24,15 @@
                         <td><%= campaign.totalDonated * 100 / campaign.goal %> %</td>
                         <td><%= campaign.status %></td>
                         <td class="actions-elm">
+                            <!-- TODO: implement campaign delete -->
                             <form action="">
-                                <button type="submit"></button>
+                                <button class="btn btn-danger" type="submit">Delete</button>
                             </form>
-                            <button type="button"  class="btn-update"
+                            <button type="button" class="btn btn-primary btn-update"
                                     data-id="<%= campaign.id %>" 
                                     data-title="<%= campaign.title %>" 
                                     data-bs-toggle="modal" data-bs-target="#updateModal">
+                                Update
                             </button>
                         </td>
                     </tr>
