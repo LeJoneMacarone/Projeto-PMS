@@ -80,9 +80,9 @@ exports.getReportById = async (req, res) => {
 // Creates a new report
 exports.createReport = async (req, res) => {
     try {
-        const { description, campaign_id, reporter_id } = req.body;
-        const newReport = await Report.create({ description: description, campaignId: campaign_id, reporterId: reporter_id });
-        res.status(201).json(newReport);
+        const { description, campaignId, reporterId } = req.body;
+        await Report.create({ description, campaignId, reporterId});
+        res.redirect("/campaigns");
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
