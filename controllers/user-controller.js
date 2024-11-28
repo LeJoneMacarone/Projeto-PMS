@@ -37,7 +37,8 @@ function renderLoginPage(req, res) {
  * @returns{void}
  */
 function renderProfilePage(req, res) {
-	const { user } = req.session;
+	const { user, error } = req.session;
+	req.session.error = "";
 
 	if (!user) {
 		req.session.error = "Log in to access the profile page.";
@@ -45,7 +46,7 @@ function renderProfilePage(req, res) {
 		return;
 	}
 
-	res.render("profile", { user });
+	res.render("profile", { user, error });
 }
 
 /** 
@@ -92,7 +93,6 @@ async function register(req, res) {
 	}
 
 	await User.create(user);
-
 
 	if (user.role == "campaign_creator") {
 		user = await User.findOne({ where: { username } });
@@ -181,9 +181,31 @@ async function login(req, res) {
  *
  * @returns{void}
  */
-function update(req, res) {
-	// TODO: implement the function
-	res.redirect("/profile");
+async function updateProfile(req, res) {
+	try {
+		const { id } = req.session.user;
+		const { newUsername, newPassword } = req.body;
+
+		const userWithSameUsername = await User.findOne({ where: { username: newUsername }});
+
+		if (!userWithSameUsername || userWithSameUsername.id == id) {
+			let data = {};
+			data.username = newUsername;
+			data.password = newPassword;
+			if (req.file) data.picture = req.file.buffer;
+
+			const sessionUser = await User.findOne({ where: { id }});
+			await sessionUser.update(data);
+
+			req.session.user = sessionUser;
+		} else {
+			req.session.error = "Username already in use.";
+		}	
+	} catch (error) {
+		req.session.error = error.message;
+	} finally {
+		res.redirect("/profile");
+	}
 }
 
 /** 
@@ -199,4 +221,12 @@ function logout(req, res) {
 	res.redirect("/login");
 }
 
-module.exports = { renderRegisterPage, renderLoginPage, renderProfilePage, login, logout, register, update };
+module.exports = { 
+	renderRegisterPage, 
+	renderLoginPage, 
+	renderProfilePage, 
+	login,
+	logout, 
+	register, 
+	updateProfile
+};
