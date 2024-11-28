@@ -14,14 +14,14 @@ const CAMPAIGNS_PER_PAGE = 6;
  */
 async function createCampaign(req, res) {
 	// TODO: maybe check if user is actually a creator(?) 
-	
+
 	const creatorId = req.session.user.id;
 	const { title, description, goal, endDate, iban } = req.body;
 
 	const request = await CampaignRequest.create({ status: "Pending" });
 	const campaign = { title, description, goal, endDate, iban, creatorId, campaignRequestId: request.id };
 	await Campaign.create(campaign);
-	
+
 	res.redirect("/campaigns");
 }
 
@@ -35,7 +35,7 @@ async function createCampaign(req, res) {
  */
 function renderCampaignForm(req, res) {
 	const { user } = req.session;
-	
+
 	if (!user || user.role != "campaign_creator") {
 		req.session.error = "Login as a campaign creator to access this page."
 		res.redirect("/login");
@@ -55,18 +55,18 @@ function renderCampaignForm(req, res) {
  */
 async function renderCampaigns(req, res) {
 	const { user } = req.session;
-	
+
 	// TODO: dinamically get the page number
 	const page = 0
-	const campaigns = await Campaign.findAll({ 
+	const campaigns = await Campaign.findAll({
 		include: [
-			{ 
-				model: User, 
+			{
+				model: User,
 				as: "creator",
 				required: true,
 			},
-			{ 
-				model: CampaignRequest, 
+			{
+				model: CampaignRequest,
 				as: "campaignRequest",
 				where: { status: "Approved" },
 			},
@@ -87,7 +87,7 @@ async function renderCampaigns(req, res) {
 async function renderCampaign(req, res) {
 	const id = req.params["id"];
 
-	const campaign = await Campaign.findOne({ 
+	const campaign = await Campaign.findOne({
 		where: { id },
 		include: [{
 			model: User,
@@ -103,11 +103,11 @@ async function renderCampaign(req, res) {
 	const totalDonated = await Donation.sum("value", {
 		where: { campaignId: id },
 	}) || 0;
-	
+
 	// TODO: exclude password field
 	// TODO: move to another function
 	const topDonations = await Donation.findAll({
-		include : [{
+		include: [{
 			model: User,
 			as: "donor",
 		}],
@@ -138,7 +138,7 @@ async function renderCampaign(req, res) {
 		limit: 5,
 	});
 
-	const topDonors = topDonations.map(row => { 
+	const topDonors = topDonations.map(row => {
 		return {
 			id: row.dataValues.donor.dataValues.id,
 			username: row.dataValues.donor.dataValues.username,
@@ -146,8 +146,8 @@ async function renderCampaign(req, res) {
 			amountDonated: row.dataValues.totalAmount,
 		}
 	});
-	
-	const latestDonors = latestDonations.map(row => { 
+
+	const latestDonors = latestDonations.map(row => {
 		return {
 			id: row.dataValues.donor.dataValues.id,
 			username: row.dataValues.donor.dataValues.username,
@@ -209,17 +209,37 @@ async function renderCampaignsOfCreator(req, res) {
 }
 
 async function deleteCampaign(req, res) {
+	const { user } = req.session;
+	if (!user) {
+		return res.redirect("/login");
+	}
+
+	if ( !(user.role=="donor" || user.role=="campaign_creator" || user.role=="administrator" || user.role=="root_administrator") ) {
+		req.session.error = "User has a invalid role. Please contact us.";
+		return res.redirect("/login");
+	}
+
+	if ( user.role == "donor" ) {
+		return res.redirect("/campaigns");
+	}
+
 	const campaign = await Campaign.findByPk(req.params.id);
 	campaign.destroy();
-	res.redirect("/campaigns/owned");
+
+
+	if (user.role == "campaign_creator") {
+		return res.redirect("/campaigns/owned");
+	}else if(user.role == "administrator" || user.role == "root_administrator"){
+		return res.redirect("/reports");
+	}
 }
 
 
-module.exports = { 
-	renderCampaigns, 
-	renderCampaignsOfCreator, 
-	renderCampaign, 
-	renderCampaignForm, 
+module.exports = {
+	renderCampaigns,
+	renderCampaignsOfCreator,
+	renderCampaign,
+	renderCampaignForm,
 	createCampaign,
 	deleteCampaign
 };
