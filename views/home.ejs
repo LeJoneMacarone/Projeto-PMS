@@ -5,6 +5,11 @@
     <%- include("./partials/nav_bar.ejs") %>
     <div class="container-md">
         <h1>Campaigns</h1>
+        <%# TODO: change the style of this buttons %> 
+        <% if (page > 0) { %>
+            <a href="/campaigns/page/<%= page - 1 %> ">Previous</a>
+        <% } %>
+        <a href="/campaigns/page/<%= page + 1 %>">Next</a>
         <!-- Container where is gonna go the campaign preview FOR EACH CAMPAIGN -->
         <div class="row">
             <% campaigns.forEach((campaign) => { %>

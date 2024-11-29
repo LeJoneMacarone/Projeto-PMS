@@ -3,7 +3,7 @@ const campaignController = require('../controllers/campaign-controller');
 
 const router = express.Router();
 
-router.get("/", campaignController.renderCampaigns);
+router.get("/(page/:page(\\d+))?", campaignController.renderCampaigns);
 
 router.get("/owned", campaignController.renderCampaignsOfCreator);
 

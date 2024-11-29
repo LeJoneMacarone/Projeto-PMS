@@ -53,8 +53,8 @@ function renderCampaignForm(req, res) {
  * @returns{void}
  */
 async function renderCampaigns(req, res) {
-	const { user } = req.session;
-	const page = req.params.page || 0;
+	const { user } = req.session; 
+	const page = parseInt(req.params.page) || 0;
 
 	const result = await Campaign.findAll({ 
 		include: [
@@ -80,7 +80,7 @@ async function renderCampaigns(req, res) {
 		return campaign;
 	});
 
-	res.render("home", { user, campaigns });
+	res.render("home", { user, campaigns, page });
 }
 
 /** 
