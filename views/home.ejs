@@ -13,9 +13,9 @@
                         <div>
                             <h3><%= campaign.title %></h3>
                             <div class="campaign-creator">
-								<img src="<%= campaign.creator.profile 
-										  ? `data:image/gif;base64,${campaign.creator.profile}` 
-										  : "images/profile.png" %>"
+								<img src=<%= campaign.creator.picture
+                                        ? `data:image/gif;base64,${ Buffer.from(campaign.creator.picture).toString("base64") }` 
+                                        : "/images/profile.png"%>
 									 alt="creator_profile" >
                                 <span><%= campaign.creator.username %></span>
                             </div>

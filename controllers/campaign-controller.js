@@ -54,10 +54,9 @@ function renderCampaignForm(req, res) {
  */
 async function renderCampaigns(req, res) {
 	const { user } = req.session;
+	const page = req.params.page || 0;
 
-	// TODO: dinamically get the page number
-	const page = 0
-	const campaigns = await Campaign.findAll({
+	const result = await Campaign.findAll({ 
 		include: [
 			{
 				model: User,
@@ -70,7 +69,16 @@ async function renderCampaigns(req, res) {
 				where: { status: "Approved" },
 			},
 		],
+		limit: CAMPAIGNS_PER_PAGE,
+		offset: page,
 	}) || [];
+
+	const campaigns = result.map(({ dataValues, creator }) => { 
+		const { id, title, description, goal } = dataValues;
+		let campaign = { id, title, description, goal };
+		campaign.creator = creator.dataValues;
+		return campaign;
+	});
 
 	res.render("home", { user, campaigns });
 }
