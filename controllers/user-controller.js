@@ -58,7 +58,6 @@ function renderProfilePage(req, res) {
  * @returns{void}
  */
 async function register(req, res) {
-
 	const { username, password, confirm_password, role } = req.body;
 
 	if (!password || !username || !confirm_password || !role) {
@@ -185,7 +184,10 @@ async function login(req, res) {
 async function updateProfile(req, res) {
 	try {
 		const { id } = req.session.user;
-		const { newUsername, newPassword } = req.body;
+		const { newUsername, newPassword, newPasswordConfirmation } = req.body;
+
+		if (newPassword != newPasswordConfirmation) 
+			throw new Error("Passwords do not match");
 
 		const userWithSameUsername = await User.findOne({ where: { username: newUsername }});
 
@@ -199,9 +201,7 @@ async function updateProfile(req, res) {
 			await sessionUser.update(data);
 
 			req.session.user = sessionUser;
-		} else {
-			req.session.error = "Username already in use.";
-		}	
+		} else throw new Error("Username already in use");
 	} catch (error) {
 		req.session.error = error.message;
 	} finally {
