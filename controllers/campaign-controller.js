@@ -12,13 +12,16 @@ const CAMPAIGNS_PER_PAGE = 6;
  * @returns{void}
  */
 async function createCampaign(req, res) {
-	// TODO: maybe check if user is actually a creator(?) 
-
-	const creatorId = req.session.user.id;
+	// TODO: maybe check if user is actually a creator(?)
 	const { title, description, goal, endDate, iban } = req.body;
+	
+	let campaign = { title, description, goal, endDate, iban }; 
+	campaign.creatorId = req.session.user.id;
+	if (req.file) campaign.media = req.file.buffer;
 
 	const request = await CampaignRequest.create({ status: "Pending" });
-	const campaign = { title, description, goal, endDate, iban, creatorId, campaignRequestId: request.id };
+	campaign.campaignRequestId = request.id;
+
 	await Campaign.create(campaign);
 
 	res.redirect("/campaigns");
@@ -74,8 +77,8 @@ async function renderCampaigns(req, res) {
 	}) || [];
 
 	const campaigns = result.map(({ dataValues, creator }) => { 
-		const { id, title, description, goal } = dataValues;
-		let campaign = { id, title, description, goal };
+		const { id, title, description, goal, media } = dataValues;
+		let campaign = { id, title, description, goal, media };
 		campaign.creator = creator.dataValues;
 		return campaign;
 	});

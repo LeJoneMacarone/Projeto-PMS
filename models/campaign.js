@@ -15,6 +15,10 @@ module.exports = (sequelize) => {
             type: DataTypes.TEXT,
             allowNull: false,
         },
+        media: {
+            type: DataTypes.BLOB,
+            allowNull: true, // This field can be null if no files are uploaded
+        },
         goal: {
             type: DataTypes.DECIMAL(10, 2), // 10 digits total, 8 before and 2 after '.'
             allowNull: false,

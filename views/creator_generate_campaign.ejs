@@ -7,7 +7,7 @@
         <%- /* include("./partials/creator_opt_bar.ejs") */ %>
         <div class="container my-4 p-4 border rounded shadow-sm bg-light">
             <h3 class="mb-3">Form to Generate the Campaign</h3>
-            <form method="POST">
+            <form method="POST" enctype="multipart/form-data">
                 <p class="mb-2 text-muted">Fill in the following fields to create a campaign</p>
                 <p class="text-danger red">* mandatory fields</p>
         
@@ -48,7 +48,7 @@
         
                 <div class="mb-3">
                     <label for="campaignMedia" class="form-label">
-                        Images or Videos (to show donors about the campaign)
+                        Image (to show users about the campaign)
                     </label>
                     <input type="file" id="campaignMedia" class="form-control" name="media" accept="image/png, image/jpeg">
                 </div>

@@ -32,10 +32,12 @@
                                 <div class="campaign-description">
                                     <%= campaign.description %>
                                 </div>
-								<!-- TODO: add picture from campaign -->
-                                <!-- <div>
-                                    <img src="https://images.theconversation.com/files/417128/original/file-20210820-27-j1ro6y.jpg?ixlib=rb-4.1.0&rect=0%2C11%2C3994%2C2640&q=45&auto=format&w=926&fit=clip" alt="campaign-thumbnail">
-                                </div> -->
+                                <% if (campaign.media) { %>
+                                    <div>
+                                        <img src="data:image/gif;base64,<%= Buffer.from(campaign.media).toString("base64") %>" 
+                                            alt="campaign-thumbnail">
+                                    </div>
+                                <% } %>
                             </div>
                         </div>
                         <div class="campaign-percentage" style="background: linear-gradient(to right, green <%= campaign.donationsPercentage %>%, white <%= campaign.donationsPercentage %>%);"></div>

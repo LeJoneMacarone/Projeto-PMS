@@ -1,4 +1,5 @@
 const express = require('express');
+const { uploadImage } = require('../utils/upload');
 const campaignController = require('../controllers/campaign-controller');
 
 const router = express.Router();
@@ -13,6 +14,6 @@ router.get("/:id(\\d+)", campaignController.renderCampaign);
 
 router.get("/create", campaignController.renderCampaignForm);
 
-router.post("/create", campaignController.createCampaign);
+router.post("/create", uploadImage.single("media"), campaignController.createCampaign);
 
 module.exports = router;

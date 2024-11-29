@@ -104,17 +104,14 @@
             <div class="mb-4">
                 <%= campaign.description %>
             </div>
-            
-			<!-- TODO: implement media-->
-            <% /* if (campaign.media) { %>
+
+            <% if (campaign.media) { %>
                 <div class="d-flex flex-wrap gap-3 mb-4">
-                    <% campaign.media.forEach((media, i) => { %>
-                        <img src="data:image/gif;base64,<%= media %>" 
-                             alt="media <%= i %>" 
-                             class="img-fluid rounded shadow-sm">
-                    <% }); %>
+                    <img src="data:image/gif;base64,<%= Buffer.from(campaign.media).toString("base64") %>" 
+                            alt="media" 
+                            class="img-fluid rounded shadow-sm">
                 </div>
-            <% } */ %>
+            <% } %>
             
             <hr class="my-4">
             
