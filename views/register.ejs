@@ -4,19 +4,17 @@
 
     <body>
         <%- include("./partials/nav_bar.ejs"); %>
-            <% /* %>
-                <% if (error) {%>
-                    <div class="alert alert-danger" role="alert">
-                        <%= error %>
-                    </div>
-                <% } %>
-            <% */ %>
+			<% if (error) { %>
+				<div class="alert alert-danger" role="alert">
+					<%= error %>
+				</div>
+            <% } %> 
             <div class="d-flex justify-content-center align-items-center mt-5">
                 <div class="card p-4 mb-3"
                     style="width: 450px; border-radius: 50px; background-color: #d9d9d9; border: none; position: relative;">
                     <div class="card-body">
                         <h3 class="text-center mb-4">Sign up</h3>
-                        <form action="" method="POST">
+                        <form method="POST" enctype="multipart/form-data">
                             <!-- Role selection -->
                             <p class="fw-bold">Role</p>
                             <div class="mb-3">
@@ -27,7 +25,7 @@
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="role" id="creatorRole"
-                                        value="creator" onclick="toggleRole(true)">
+                                        value="campaign_creator" onclick="toggleRole(true)">
                                     <label class="form-check-label" for="creatorRole">Campaign creator</label>
                                 </div>
                             </div>
@@ -45,8 +43,8 @@
                             </div>
                             <!-- Confirm password -->
                             <div class="">
-                                <label for="confirm_password" class="form-label">Confirm password</label>
-                                <input type="password" name="confirm_password" id="confirm_password"
+                                <label for="password_confirmation" class="form-label">Confirm password</label>
+                                <input type="password" name="password_confirmation" id="password_confirmation"
                                     class="form-control" style="border-radius: 50px;"
                                     placeholder="Confirm your password">
                             </div>
@@ -58,12 +56,6 @@
                                     <label for="id_document" class="form-label">Identification document in PDF format
                                         *</label>
                                     <input type="file" name="id_document" id="id_document" class="form-control"
-                                        style="border-radius: 50px;">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="iban_document" class="form-label">Bank Account Information Document
-                                        (IBAN) *</label>
-                                    <input type="file" name="iban_document" id="iban_document" class="form-control"
                                         style="border-radius: 50px;">
                                 </div>
                             </div>
@@ -79,7 +71,7 @@
                         <!-- Already have an account -->
                         <div class="text-center mt-3">
                             <p class="mb-0">Already have an account?
-                                <a href="login.ejs" class="fw-bold" style="color: #3d704d;">Sign in</a>
+                                <a href="/login" class="fw-bold" style="color: #3d704d;">Sign in</a>
                             </p>
                         </div>
                     </div>

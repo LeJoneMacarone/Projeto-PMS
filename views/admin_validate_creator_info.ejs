@@ -5,27 +5,21 @@
     <%- include("./partials/nav_bar.ejs"); %>
     <div class="container mt-5">
         <div class="mb-4">
-            <a href="#" class="btn btn-outline-dark mb-4">
+            <a href="/campaign_creators" class="btn btn-outline-dark mb-4">
                 <span>&larr;</span> Go Back
             </a>
-            <h1>Validate Creator: <span class="text-primary"><%= creator.username %></span></h1>
+            <h1>Validate Creator: <span class="text-primary"><%= request.campaignCreator.username %></span></h1>
         </div>
 
         <div class="card shadow-sm mb-4">
             <div class="card-body">
                 <p class="card-text">
-                    Validate the documents below and decide whether to approve or reject this campaign creator.
+                    Validate the document below and decide whether to approve or reject this campaign creator.
                 </p>
                 <ul class="list-group">
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span>Identification Document</span>
-                        <a href="<%= creator.idDocument %>" target="_blank" class="btn btn-outline-primary btn-sm">
-                            View Document
-                        </a>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span>Bank Account Information Document (IBAN)</span>
-                        <a href="<%= creator.bankDocument %>" target="_blank" class="btn btn-outline-primary btn-sm">
+                        <a href="/campaign_creators/<%= request.id %>/document" target="_blank" class="btn btn-outline-primary btn-sm">
                             View Document
                         </a>
                     </li>
@@ -35,10 +29,12 @@
         
 
         <div class="d-flex gap-3">
-            <form action="" method="POST">
+            <form action="/campaign_creators/update_status/<%= request.id %>" method="POST">
+                <input type="hidden" name="status" value="Approved">
                 <button type="submit" class="btn btn-success w-100">Approve</button>
             </form>
-            <form action="" method="POST">
+            <form action="/campaign_creators/update_status/<%= request.id %>" method="POST">
+                <input type="hidden" name="status" value="Rejected">
                 <button type="submit" class="btn btn-danger w-100">Reject</button>
             </form>
         </div>

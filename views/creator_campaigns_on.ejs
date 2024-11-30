@@ -4,13 +4,15 @@
 <body>
     <%- include("./partials/nav_bar.ejs") %>
     <div class="container-md">
-        <%- include("./partials/creator_opt_bar.ejs") %>
+		<!-- TODO: uncomment after implementing a way to filter campaigns by status -->
+        <%- /* include("./partials/creator_opt_bar.ejs") */ %>
         <div class="table-responsive-md">
             <table class="table table-bordered table align-middle table-striped custom-table">
                 <tr>
                     <th>Title</th>
                     <th>Goal</th>
                     <th>Money Donated (%)</th>
+                    <th>Status</th>
                     <th>Actions</th>
                 </tr>
     
@@ -19,15 +21,18 @@
                         <td><a href="" class="h6"><%= campaign.title %></a></td>
                         <td><%= campaign.goal %> €</td>
                         <!--Campaign percentage of money donated-->
-                        <td><%= campaign.donations_percentage %> %</td>
+                        <td><%= campaign.totalDonated * 100 / campaign.goal %> %</td>
+                        <td><%= campaign.status %></td>
                         <td class="actions-elm">
-                            <form action="">
-                                <button type="submit"></button>
+                            <!-- TODO: implement campaign delete -->
+                            <form action="/campaigns/<%= campaign.id %>/delete">
+                                <button class="btn btn-danger" type="submit">Delete</button>
                             </form>
-                            <button type="button"  class="btn-update"
+                            <button type="button" class="btn btn-primary btn-update"
                                     data-id="<%= campaign.id %>" 
                                     data-title="<%= campaign.title %>" 
                                     data-bs-toggle="modal" data-bs-target="#updateModal">
+                                Update
                             </button>
                         </td>
                     </tr>
@@ -46,19 +51,19 @@
                     </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="">
+                <form action="/campaigns/updates" method="POST" enctype="multipart/form-data">
                     <div class="modal-body">
                         <p>Fill in the following fields to update donors and your campaign page about its progress</p>
                         <p class="red">* mandatory field</p>
                         <div class="mb-3 custom-textarea">
                             <label for="publication" class="form-label">Publication: <span class="red">*</span></label>
-                            <textarea id="publication" name="publication" class="form-control" placeholder="Write here your publication" required></textarea>
+                            <textarea id="content" name="content" class="form-control" placeholder="Write here your publication" required></textarea>
                         </div>
                         <div class="mb-3">
                             <label for="media" class="form-label">Upload Media:</label>
                             <input id="media" type="file" name="media" class="form-control" accept="video/*,image/png,image/jpeg">
                         </div>
-                        <input type="hidden" id="campaignId" name="id">
+                        <input type="hidden" id="campaignId" name="campaignId">
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Publish</button>

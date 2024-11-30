@@ -11,15 +11,16 @@ module.exports = (sequelize) => {
             type: DataTypes.TEXT,
             allowNull: false,
         },
-        campaign_id: {
+        campaignId: {
             type: DataTypes.INTEGER,
             references: {
                 model: 'Campaign',
                 key: 'id',
             },
             allowNull: false,
+            onDelete: 'CASCADE',
         },
-        reporter_id: {
+        reporterId: {
             type: DataTypes.INTEGER,
             references: {
                 model: 'User',
@@ -27,15 +28,18 @@ module.exports = (sequelize) => {
             },
             allowNull: false,
         },
+    }, {
+        freezeTableName: true,
+        timestamps: true
     });
 
     Report.associate = (models) => {
         Report.belongsTo(models.Campaign, {
-            foreignKey: 'campaign_id',
+            foreignKey: 'campaignId',
             as: 'campaign',
         });
         Report.belongsTo(models.User, {
-            foreignKey: 'reporter_id',
+            foreignKey: 'reporterId',
             as: 'reporter',
         });
     };

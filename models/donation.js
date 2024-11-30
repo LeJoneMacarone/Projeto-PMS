@@ -11,19 +11,16 @@ module.exports = (sequelize) => {
             type: DataTypes.DECIMAL(10, 2),  // 10 digits total, 8 before and 2 after '.'
             allowNull: false,
         },
-        date: {
-            type: DataTypes.DATE,
-            allowNull: false,
-        },
-        campaign_id: {
+        campaignId: {
             type: DataTypes.INTEGER,
             references: {
                 model: 'Campaign',
                 key: 'id',
             },
             allowNull: false,
+            onDelete: 'CASCADE',
         },
-        donor_id: {
+        donorId: {
             type: DataTypes.INTEGER,
             references: {
                 model: 'User',
@@ -31,15 +28,18 @@ module.exports = (sequelize) => {
             },
             allowNull: false,
         },
+    }, {
+        freezeTableName: true,
+        timestamps: true
     });
 
     Donation.associate = (models) => {
         Donation.belongsTo(models.Campaign, {
-            foreignKey: 'campaign_id',
+            foreignKey: 'campaignId',
             as: 'campaign',
         });
         Donation.belongsTo(models.User, {
-            foreignKey: 'donor_id',
+            foreignKey: 'donorId',
             as: 'donor',
         });
     };

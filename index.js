@@ -2,14 +2,19 @@
 const express = require("express");
 const session = require("express-session");
 
-// Controllers
-const campaignController = require("./controllers/campaign-controller");
-const userController = require("./controllers/user-controller.js")
+// Routes
+const userRoutes = require("./routes/user-routes");
+const campaignRoutes = require("./routes/campaign-routes");
+const donationRoutes = require("./routes/donation-routes");
+const campaignUpdateRoutes = require("./routes/campaign-update-routes.js");
+const campaignRequestRoutes = require("./routes/campaign-requests-routes");
+const reportRoutes = require("./routes/report-routes");
+const campaignCreatorRequestRoutes = require("./routes/campaign-creator-request-routes");
 
 // Variables
 const PORT = 3000;
 const ONEDAY = 24 * 60 * 60 * 1000;
-const SECRET = "secret"
+const SECRET = "secret";
 const app = express();
 
 // Config
@@ -25,15 +30,13 @@ app.use(session({
 }));
 
 // Routes
-app.get("/register", userController.renderRegisterPage);
-app.get("/login", userController.renderLoginPage);
-app.get("/profile", userController.renderProfilePage);
-app.post("/register", userController.register);
-app.post("/login", userController.login);
-app.post("/logout", userController.logout);
-app.post("/profile", userController.update);
-app.get("/", campaignController.viewCampaigns);
-app.get("/campaign/:id", campaignController.viewCampaign);
+app.use("/", userRoutes);
+app.use("/campaigns", campaignRoutes);
+app.use("/donations", donationRoutes);
+app.use("/campaigns/updates", campaignUpdateRoutes);
+app.use("/requests/campaigns", campaignRequestRoutes);
+app.use("/reports", reportRoutes);
+app.use("/campaign_creators", campaignCreatorRequestRoutes);
 
 // Entry point
 app.listen(PORT, () => {

@@ -16,14 +16,17 @@ module.exports = (sequelize) => {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        profilePicture: {
+        picture: {
             type: DataTypes.BLOB,
             allowNull: true,
         },
         role: {
-            type: DataTypes.ENUM('administrator','campaign_creator','donor'), //needs to be properly defined
+            type: DataTypes.ENUM('administrator','campaign_creator','donor', 'root_administrator'), //needs to be properly defined
             allowNull: false,
         },
+    }, {
+        freezeTableName: true,
+        timestamps: true
     });
 
     return User;

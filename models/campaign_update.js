@@ -11,27 +11,27 @@ module.exports = (sequelize) => {
             type: DataTypes.TEXT,
             allowNull: false,
         },
-        multimediaFiles: { // (e.g., images, videos)
+        media: {
             type: DataTypes.BLOB,
             allowNull: true, // This field can be null if no files are uploaded
         },
-        publicationDate: {
-            type: DataTypes.DATE,
-            allowNull: false,
-        },
-        campaign_id: {
+        campaignId: {
             type: DataTypes.INTEGER,
             references: {
                 model: 'Campaign',
                 key: 'id',
             },
             allowNull: false,
+            onDelete: 'CASCADE',
         },
+    }, {
+        freezeTableName: true,
+        timestamps: true
     });
 
     CampaignUpdate.associate = (models) => {
         CampaignUpdate.belongsTo(models.Campaign, {
-            foreignKey: 'campaign_id',
+            foreignKey: 'campaignId',
             as: 'campaign',
         });
     };

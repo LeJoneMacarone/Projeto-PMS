@@ -24,4 +24,9 @@ sequelize.sync()
     .then(() => console.log('DB synced successfully'))
     .catch(err => console.error('Error syncing DB:', err));
 
+//TODO make this mess cleaner:
+// Uncomment to create root admin 
+// obs: run the programm once without uncommenting to have the database then after uncommenting and running once, comment it again  
+//models.User.create({ username:"root", password: "root", role: "root_administrator" });
+
 module.exports = { sequelize, models };

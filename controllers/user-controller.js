@@ -1,5 +1,4 @@
-// TODO: use database models instead
-const USERS = require("../models/users-model");
+const { User, CampaignCreatorRequest } = require("../utils/sequelize").models;
 
 /** 
  * Render the register page.
@@ -38,8 +37,18 @@ function renderLoginPage(req, res) {
  * @returns{void}
  */
 function renderProfilePage(req, res) {
-	const { user } = req.session;
-	res.render("profile", { user });
+	const { user, error } = req.session;
+	req.session.error = "";
+	const { user, error } = req.session;
+	req.session.error = "";
+
+	if (!user) {
+		req.session.error = "Log in to access the profile page.";
+		res.redirect("/login");
+		return;
+	}
+
+	res.render("profile", { user, error });
 }
 
 /** 
@@ -50,35 +59,50 @@ function renderProfilePage(req, res) {
  *
  * @returns{void}
  */
-function register(req, res) {
-	const { username, password, confirm_password, role } = req.body;
+async function register(req, res) {
+	const { username, password, password_confirmation, role } = req.body;
 
-	if (!password || !username || !confirm_password || !role) {
+	if (!password || !username || !password_confirmation || !role) {
 		req.session.error = "Empty fields.";
 		res.redirect("/register");
-		return; 
+		return;
 	}
 
-	if (password != confirm_password) {
+	if (password != password_confirmation) {
 		req.session.error = "Different passwords.";
 		res.redirect("/register");
-		return; 
+		return;
 	}
 
-	// TODO: implement with database operations
-	if (USERS.some(user => user.username == username)) {
+	let user = await User.findOne({ where: { username } });
+
+	if (user) {
 		req.session.error = "Username already taken.";
 		res.redirect("/register");
-		return; 
+		return;
 	}
-	
-	// TODO: implement with database operations
-	const id = USERS
-		.sort((u1, u2) => u1.id - u2.id)
-		.id + 1;
-	// TODO: use a default profile picture
-	const user = { id, username, password, role, profilePicture: null };
-	USERS.push(user);
+
+	user = { username, password, role, profilePicture: null };
+
+	const file = req.file;
+	if (user.role == "campaign_creator") {
+		if (!file) {
+			req.session.error = "No file uploaded.";
+			res.redirect("/register");
+			return;
+		}
+	}
+
+	await User.create(user);
+
+	if (user.role == "campaign_creator") {
+		user = await User.findOne({ where: { username } });
+
+		await CampaignCreatorRequest.create({
+			identificationDocument: file.buffer,
+			campaignCreatorId: user.id,
+		});
+	}
 
 	res.redirect("/login");
 }
@@ -91,21 +115,63 @@ function register(req, res) {
  *
  * @returns{void}
  */
-function login(req, res) {
+async function login(req, res) {
 	const { username, password } = req.body;
-	
-	// TODO: implement with database operations
-	const user = USERS
-		.find(user => user.username == username && user.password == password);
+
+	// TODO: exclude password field for security
+	const user = await User.findOne({ where: { username, password } });
 
 	if (!user) {
-		req.session.error = "User not found."
-		res.redirect("/login");
-		return;
+		req.session.error = "User not found.";
+		return res.redirect("/login");
 	}
 
 	req.session.user = user;
-	res.redirect("/");
+
+	switch (user.role) {
+		case "donor":
+			res.redirect("/campaigns");
+			break;
+		case "campaign_creator":
+			const ccRequest = await CampaignCreatorRequest.findOne({
+				where: { campaignCreatorId: user.id },
+			});
+
+			if (!ccRequest) {
+				req.session.error = "User not have a Campaign Creator Request. Contact us to fix your problem.";
+				console.log("Campaign creator " + user.username + " with id " + user.id + "doesn't have a campaign creator request.");
+				res.redirect("/login");
+				break;
+			}
+
+			switch (ccRequest.status) {
+				case "Pending":
+					req.session.error = "Your request to be a campaign creator wasnt validated. Please try again later.";
+					res.redirect("/login");
+					break;
+				case "Approved":
+					res.redirect("/campaigns/create");
+					break
+				case "Rejected":
+					await user.destroy();
+					req.session.error = "Your request to be a campaign creator was rejected. Please register again with a valid information/document.";
+					res.redirect("/login");
+					break;
+				default:
+					req.session.error = "User not have a valid status (" + ccRequest.status + ") in his Campaign Creator Request. Contact us to fix your problem.";
+					res.redirect("/login");
+					break;
+			}
+			break;
+		case "root_administrator":
+		case "administrator":
+			res.redirect("/requests/campaigns");
+			break
+		default:
+			req.session.error = "User does not have a valid role (" + user.role + "). Contact us to fix your problem.";
+			res.redirect("/login");
+			break;
+	}
 }
 
 /** 
@@ -116,9 +182,32 @@ function login(req, res) {
  *
  * @returns{void}
  */
-function update(req, res) {
-	// TODO: implement the function
-	res.redirect("/profile");
+async function updateProfile(req, res) {
+	try {
+		const { id } = req.session.user;
+		const { newUsername, newPassword, newPasswordConfirmation } = req.body;
+
+		if (newPassword != newPasswordConfirmation) 
+			throw new Error("Passwords do not match");
+
+		const userWithSameUsername = await User.findOne({ where: { username: newUsername }});
+
+		if (!userWithSameUsername || userWithSameUsername.id == id) {
+			let data = {};
+			data.username = newUsername;
+			data.password = newPassword;
+			if (req.file) data.picture = req.file.buffer;
+
+			const sessionUser = await User.findOne({ where: { id }});
+			await sessionUser.update(data);
+
+			req.session.user = sessionUser;
+		} else throw new Error("Username already in use");
+	} catch (error) {
+		req.session.error = error.message;
+	} finally {
+		res.redirect("/profile");
+	}
 }
 
 /** 
@@ -134,4 +223,12 @@ function logout(req, res) {
 	res.redirect("/login");
 }
 
-module.exports = { renderRegisterPage, renderLoginPage, renderProfilePage, login, logout, register, update };
+module.exports = { 
+	renderRegisterPage, 
+	renderLoginPage, 
+	renderProfilePage, 
+	login,
+	logout, 
+	register, 
+	updateProfile
+};

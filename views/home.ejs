@@ -5,17 +5,23 @@
     <%- include("./partials/nav_bar.ejs") %>
     <div class="container-md">
         <h1>Campaigns</h1>
+        <%# TODO: change the style of this buttons %> 
+        <% if (page > 0) { %>
+            <a href="/campaigns/page/<%= page - 1 %> ">Previous</a>
+        <% } %>
+        <a href="/campaigns/page/<%= page + 1 %>">Next</a>
         <!-- Container where is gonna go the campaign preview FOR EACH CAMPAIGN -->
         <div class="row">
             <% campaigns.forEach((campaign) => { %>
-                <a href="" class="col-md-6 col-lg-4 campaign-box">
+                <a href="/campaigns/<%= campaign.id %>" class="col-md-6 col-lg-4 campaign-box">
                     <div>
                         <div>
                             <h3><%= campaign.title %></h3>
-        
                             <div class="campaign-creator">
-                                <!-- <img src="data:image/gif;base64,<%= campaign.creator.profile %>" alt="creator_profile"> -->
-                                <img src="/images/profile.png" alt="creator_profile">
+								<img src=<%= campaign.creator.picture
+                                        ? `data:image/gif;base64,${ Buffer.from(campaign.creator.picture).toString("base64") }` 
+                                        : "/images/profile.png"%>
+									 alt="creator_profile" >
                                 <span><%= campaign.creator.username %></span>
                             </div>
                         </div>
@@ -26,10 +32,12 @@
                                 <div class="campaign-description">
                                     <%= campaign.description %>
                                 </div>
-                                
-                                <div>
-                                    <img src="https://images.theconversation.com/files/417128/original/file-20210820-27-j1ro6y.jpg?ixlib=rb-4.1.0&rect=0%2C11%2C3994%2C2640&q=45&auto=format&w=926&fit=clip" alt="campaign-thumbnail">
-                                </div>
+                                <% if (campaign.media) { %>
+                                    <div>
+                                        <img src="data:image/gif;base64,<%= Buffer.from(campaign.media).toString("base64") %>" 
+                                            alt="campaign-thumbnail">
+                                    </div>
+                                <% } %>
                             </div>
                         </div>
                         <div class="campaign-percentage" style="background: linear-gradient(to right, green <%= campaign.donationsPercentage %>%, white <%= campaign.donationsPercentage %>%);"></div>

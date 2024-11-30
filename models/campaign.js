@@ -15,6 +15,10 @@ module.exports = (sequelize) => {
             type: DataTypes.TEXT,
             allowNull: false,
         },
+        media: {
+            type: DataTypes.BLOB,
+            allowNull: true, // This field can be null if no files are uploaded
+        },
         goal: {
             type: DataTypes.DECIMAL(10, 2), // 10 digits total, 8 before and 2 after '.'
             allowNull: false,
@@ -44,15 +48,19 @@ module.exports = (sequelize) => {
             allowNull: true,
         },
 
-        campaign_request_id: { // null if request expired after being accepted (?)
+        campaignRequestId: { // null if the logic of the user<->request changes
             type: DataTypes.INTEGER,
             references: {
                 model: 'CampaignRequest',
                 key: 'id',
             },
-            allowNull: true, 
+            allowNull: true,
         },
+    }, {
+        freezeTableName: true,
+        timestamps: true
     });
+
     Campaign.associate = (models) => {
         Campaign.belongsTo(models.User, {
             foreignKey: 'creatorId',
@@ -65,8 +73,13 @@ module.exports = (sequelize) => {
         });
 
         Campaign.belongsTo(models.CampaignRequest, {
-            foreignKey: 'campaign_request_id',
-            as: 'campaign_request',
+            foreignKey: 'campaignRequestId',
+            as: 'campaignRequest',
+        });
+
+        Campaign.hasMany(models.Donation, {
+            foreignKey: 'campaignId',
+            as: 'donations',
         });
     };
 
