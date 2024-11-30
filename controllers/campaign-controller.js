@@ -73,7 +73,7 @@ async function renderCampaigns(req, res) {
 			},
 		],
 		limit: CAMPAIGNS_PER_PAGE,
-		offset: page,
+		offset: page * CAMPAIGNS_PER_PAGE,
 	}) || [];
 
 	const campaigns = result.map(({ dataValues, creator }) => { 
