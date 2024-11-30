@@ -39,6 +39,8 @@ function renderLoginPage(req, res) {
 function renderProfilePage(req, res) {
 	const { user, error } = req.session;
 	req.session.error = "";
+	const { user, error } = req.session;
+	req.session.error = "";
 
 	if (!user) {
 		req.session.error = "Log in to access the profile page.";
