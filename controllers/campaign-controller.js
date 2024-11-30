@@ -141,6 +141,7 @@ async function renderCampaign(req, res) {
 			model: User,
 			as: "donor",
 		}],
+		where: { campaignId: id },
 		group: ["donorId"],
 		order: [
 			["createdAt", "DESC"]
