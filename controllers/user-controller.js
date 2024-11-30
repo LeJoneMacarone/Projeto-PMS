@@ -37,7 +37,10 @@ function renderLoginPage(req, res) {
  * @returns{void}
  */
 function renderProfilePage(req, res) {
-	const { user } = req.session;
+	const { user, error } = req.session;
+	req.session.error = "";
+	const { user, error } = req.session;
+	req.session.error = "";
 
 	if (!user) {
 		req.session.error = "Log in to access the profile page.";
@@ -45,7 +48,7 @@ function renderProfilePage(req, res) {
 		return;
 	}
 
-	res.render("profile", { user });
+	res.render("profile", { user, error });
 }
 
 /** 
@@ -57,16 +60,15 @@ function renderProfilePage(req, res) {
  * @returns{void}
  */
 async function register(req, res) {
+	const { username, password, password_confirmation, role } = req.body;
 
-	const { username, password, confirm_password, role } = req.body;
-
-	if (!password || !username || !confirm_password || !role) {
+	if (!password || !username || !password_confirmation || !role) {
 		req.session.error = "Empty fields.";
 		res.redirect("/register");
 		return;
 	}
 
-	if (password != confirm_password) {
+	if (password != password_confirmation) {
 		req.session.error = "Different passwords.";
 		res.redirect("/register");
 		return;
@@ -92,7 +94,6 @@ async function register(req, res) {
 	}
 
 	await User.create(user);
-
 
 	if (user.role == "campaign_creator") {
 		user = await User.findOne({ where: { username } });
@@ -181,9 +182,32 @@ async function login(req, res) {
  *
  * @returns{void}
  */
-function update(req, res) {
-	// TODO: implement the function
-	res.redirect("/profile");
+async function updateProfile(req, res) {
+	try {
+		const { id } = req.session.user;
+		const { newUsername, newPassword, newPasswordConfirmation } = req.body;
+
+		if (newPassword != newPasswordConfirmation) 
+			throw new Error("Passwords do not match");
+
+		const userWithSameUsername = await User.findOne({ where: { username: newUsername }});
+
+		if (!userWithSameUsername || userWithSameUsername.id == id) {
+			let data = {};
+			data.username = newUsername;
+			data.password = newPassword;
+			if (req.file) data.picture = req.file.buffer;
+
+			const sessionUser = await User.findOne({ where: { id }});
+			await sessionUser.update(data);
+
+			req.session.user = sessionUser;
+		} else throw new Error("Username already in use");
+	} catch (error) {
+		req.session.error = error.message;
+	} finally {
+		res.redirect("/profile");
+	}
 }
 
 /** 
@@ -199,4 +223,12 @@ function logout(req, res) {
 	res.redirect("/login");
 }
 
-module.exports = { renderRegisterPage, renderLoginPage, renderProfilePage, login, logout, register, update };
+module.exports = { 
+	renderRegisterPage, 
+	renderLoginPage, 
+	renderProfilePage, 
+	login,
+	logout, 
+	register, 
+	updateProfile
+};

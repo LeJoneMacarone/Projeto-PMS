@@ -12,13 +12,16 @@ const CAMPAIGNS_PER_PAGE = 6;
  * @returns{void}
  */
 async function createCampaign(req, res) {
-	// TODO: maybe check if user is actually a creator(?) 
-
-	const creatorId = req.session.user.id;
+	// TODO: maybe check if user is actually a creator(?)
 	const { title, description, goal, endDate, iban } = req.body;
+	
+	let campaign = { title, description, goal, endDate, iban }; 
+	campaign.creatorId = req.session.user.id;
+	if (req.file) campaign.media = req.file.buffer;
 
 	const request = await CampaignRequest.create({ status: "Pending" });
-	const campaign = { title, description, goal, endDate, iban, creatorId, campaignRequestId: request.id };
+	campaign.campaignRequestId = request.id;
+
 	await Campaign.create(campaign);
 
 	res.redirect("/campaigns");
@@ -53,11 +56,10 @@ function renderCampaignForm(req, res) {
  * @returns{void}
  */
 async function renderCampaigns(req, res) {
-	const { user } = req.session;
+	const { user } = req.session; 
+	const page = parseInt(req.params.page) || 0;
 
-	// TODO: dinamically get the page number
-	const page = 0
-	const campaigns = await Campaign.findAll({
+	const result = await Campaign.findAll({ 
 		include: [
 			{
 				model: User,
@@ -70,9 +72,18 @@ async function renderCampaigns(req, res) {
 				where: { status: "Approved" },
 			},
 		],
+		limit: CAMPAIGNS_PER_PAGE,
+		offset: page,
 	}) || [];
 
-	res.render("home", { user, campaigns });
+	const campaigns = result.map(({ dataValues, creator }) => { 
+		const { id, title, description, goal, media } = dataValues;
+		let campaign = { id, title, description, goal, media };
+		campaign.creator = creator.dataValues;
+		return campaign;
+	});
+
+	res.render("home", { user, campaigns, page });
 }
 
 /** 
