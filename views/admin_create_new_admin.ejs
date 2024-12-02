@@ -12,7 +12,7 @@
                     <div class="card p-4 mt-4"
                         style="max-width: 350px; width: 100%; background-color: #d6e8d6; border-radius: 50px; padding: 20px; border: none;">
                         <div class="card-body">
-                            <form action="" method="post">
+                            <form action="/register" method="POST">
                                 <!-- Username -->
                                 <div class="mb-3">
                                     <label for="username" class="form-label">Username</label>
@@ -27,11 +27,13 @@
                                 </div>
                                 <!-- Confirm password -->
                                 <div class="mb-4">
-                                    <label for="confirm_password" class="form-label">Confirm password</label>
-                                    <input type="password" class="form-control" id="confirm_password"
-                                        name="confirm_password" style="border-radius: 50px;"
+                                    <label for="password_confirmation" class="form-label">Confirm password</label>
+                                    <input type="password" class="form-control" id="password_confirmation"
+                                        name="password_confirmation" style="border-radius: 50px;"
                                         placeholder="Enter password again" required>
                                 </div>
+                                <!-- Role -->
+                                <input type="hidden" name="role" value="administrator">
                                 <!-- Create button -->
                                 <div class="text-center">
                                     <button type="submit" class="btn"

@@ -50,6 +50,26 @@ function renderProfilePage(req, res) {
 }
 
 /** 
+ * Render the form to add a new administrator. It must be only visible to the root_administrator role.
+ *
+ * @param{import("express").Request} req - The express request object.
+ * @param{import("express").Response} res - The express response object.
+ *
+ * @returns{void}
+ */
+async function renderAdminCreationForm(req, res) {
+	const { user } = req.session;
+
+	if (!user || user.role != "root_administrator") {
+		req.session.error = "You must be root to access this feature."
+		res.redirect("/login");
+		return;
+	}
+
+	res.render("admin_create_new_admin", { user });
+}
+
+/** 
  * Register the user in the platform.
  *
  * @param{import("express").Request} req - The express request object.
@@ -221,12 +241,13 @@ function logout(req, res) {
 	res.redirect("/login");
 }
 
-module.exports = { 
-	renderRegisterPage, 
-	renderLoginPage, 
-	renderProfilePage, 
+module.exports = {
+	renderRegisterPage,
+	renderLoginPage,
+	renderProfilePage,
+	renderAdminCreationForm,
 	login,
-	logout, 
-	register, 
+	logout,
+	register,
 	updateProfile
 };

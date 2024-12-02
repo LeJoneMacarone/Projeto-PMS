@@ -8,11 +8,13 @@ router.get('/login', userController.renderLoginPage);
 
 router.get('/register', userController.renderRegisterPage);
 
+router.get('/register/admin', userController.renderAdminCreationForm);
+
 router.get('/profile', userController.renderProfilePage);
 
 router.post('/login', userController.login);
 
-router.post('/register', uploadDocument.single('id_document'), multerErrorHandlerIdDocument , userController.register);
+router.post('/register', uploadDocument.single('id_document'), multerErrorHandlerIdDocument, userController.register);
 
 router.post('/profile', uploadImage.single('picture'), userController.updateProfile);
 
