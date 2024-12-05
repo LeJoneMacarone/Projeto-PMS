@@ -40,8 +40,8 @@
                         <div class="list-group">
                             <% topDonors.forEach((donor) => { %> 
                                 <div class="list-group-item d-flex align-items-center">
-                                    <img src="<%= donor.profile
-											  ? `data:image/gif;base64,${ donor.profile }` 
+                                    <img src="<%= donor.picture
+											  ? `data:image/gif;base64,${ Buffer.from(donor.picture).toString("base64") }` 
 											  : "/images/profile.png" %>" 
 										 alt="donor_profile" 
 										 class="rounded-circle" 
@@ -61,8 +61,8 @@
                         <div class="list-group">
                             <% latestDonors.forEach((donor) => { %>
                                 <div class="list-group-item d-flex align-items-center">
-                                    <img src="<%= donor.profile
-											  ? `data:image/gif;base64,${ donor.profile }` 
+                                    <img src="<%= donor.picture
+											  ? `data:image/gif;base64,${ Buffer.from(donor.picture).string("base64") }` 
 											  : "/images/profile.png" %>" 
 										 alt="donor_profile" 
 										 class="rounded-circle" 
@@ -88,8 +88,8 @@
             <h1 class="display-4 text-break mb-3"><%= campaign.title %></h1>
             
             <div class="d-flex align-items-center mb-4">
-				<img src="<%= campaign.creator.profile 
-						  ? `data:image/gif;base64,${campaign.creator.profile}` 
+				<img src="<%= campaign.creator.picture 
+						  ? `data:image/gif;base64,${ Buffer.from(campaign.creator.picture).toString("base64") }` 
 						  : "/images/profile.png" %>"
                      alt="creator_profile" 
                      class="rounded-circle me-3" 
