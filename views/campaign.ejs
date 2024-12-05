@@ -26,7 +26,7 @@
                 <div class="mb-4">
                     <h4>Donated Money:</h4>
                     <p><small>** Till this moment</small></p>
-                    <div class="custom-bar" style="background: linear-gradient(to top, rgb(75, 255, 75) 80%, white 80%);">
+                    <div class="custom-bar" style="background: linear-gradient(to top, rgb(75, 255, 75) <%= (totalDonated / campaign.goal) * 100 %>%, white <%= (totalDonated / campaign.goal) * 100 %>%);">
                         <div class="h6">
                             <%= totalDonated %> €
                         </div>
