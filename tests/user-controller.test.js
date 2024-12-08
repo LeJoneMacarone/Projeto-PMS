@@ -131,23 +131,54 @@ describe("User Routes Tests - NOT LOGGED USER", () => {
         expect(res.headers.location).toBe("/login");
     });
 
-    // test("POST /register succeeds with valid data and file upload for CREATOR", async () => {
-    //     User.findOne.mockResolvedValue(null);
-    //     User.create.mockResolvedValue({ id: 1, username: "creator"});
-    //     CampaignCreatorRequest.create.mockResolvedValue({});
+    test("POST /register succeeds with valid data as a ADMIN", async () => {
+        User.findOne.mockResolvedValue(null);
+        User.create.mockResolvedValue({ id: 1, username: "new_user" });
+    
+        const res = await request(app)
+            .post("/register")
+            .field("username", "new_user")
+            .field("password", "password123")
+            .field("password_confirmation", "password123")
+            .field("role", "administrator")
+        
+        expect(res.status).toBe(302);
+        expect(res.headers.location).toBe("/login");
+    });
 
-    //     const mockFile = { buffer: Buffer.from("mock-file-buffer"), name: "mock_file.pdf" };
-    //     const res = await request(app)
-    //         .post("/register")
-    //         .field("username", "creator")
-    //         .field("password", "pass123")
-    //         .field("password_confirmation", "pass123")
-    //         .field("role", "campaign_creator")
-    //         .attach("id_document", mockFile.buffer, mockFile.name);
+    test("POST /register succeeds with valid data and file upload for CREATOR", async () => {
+        jest.mock("../utils/upload", () => ({
+            uploadDocument: {
+                single: jest.fn(() => (req, res, next) => {
+                    req.file = {
+                        buffer: Buffer.from("mock-file-buffer"),
+                        originalname: "mock-file.pdf",
+                        mimetype: "application/pdf",
+                        size: 1024,
+                    };
+                    next();
+                }),
+            },
+            multerErrorHandlerIdDocument: jest.fn((err, req, res, next) => next()),
+        }));
 
-    //     expect(res.status).toBe(302);
-    //     expect(res.headers.location).toBe("/login");
-    // });
+        User.findOne
+            .mockResolvedValueOnce(null)
+            .mockResolvedValueOnce({ id: 1, username: "new_creator" });
+        User.create.mockResolvedValue({ id: 1, username: "new_creator"});
+        CampaignCreatorRequest.create.mockResolvedValue({});
+
+        const res = await request(app)
+            .post("/register")
+            .field("username", "new_creator")
+            .field("password", "pass123")
+            .field("password_confirmation", "pass123")
+            .field("role", "campaign_creator")
+            .attach("id_document", Buffer.from("mock-file-buffer"), "mock-file.pdf");
+
+        expect(res.status).toBe(302);
+        expect(res.headers.location).toBe("/login");
+    });
 });
 
 describe("User Routes Tests - DONOR", () => {
