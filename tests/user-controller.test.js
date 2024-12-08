@@ -4,12 +4,13 @@ const request = require("supertest");
 const express = require("express");
 const session = require("express-session");
 const userRoutes = require("../routes/user-routes");
+const { login } = require("../controllers/user-controller");
 const { User, CampaignCreatorRequest } = require("../utils/sequelize").models;
 
 jest.mock("../utils/sequelize", () => ({
     models: {
-      User: { findOne: jest.fn(), create: jest.fn() },
-      CampaignCreatorRequest: { findOne: jest.fn(), create: jest.fn() },
+        User: { findOne: jest.fn(), create: jest.fn() },
+        CampaignCreatorRequest: { findOne: jest.fn(), create: jest.fn() },
     },
 }));
 
@@ -178,6 +179,78 @@ describe("User Routes Tests - NOT LOGGED USER", () => {
 
         expect(res.status).toBe(302);
         expect(res.headers.location).toBe("/login");
+    });
+});
+
+describe("Login as a CREATOR", () => {
+    let req, res;
+
+    beforeEach(() => {
+        req = {
+            body: { username: "testuser", password: "testpassword" },
+            session: { error: null, user: null },
+        };
+
+        res = {
+            redirect: jest.fn(),
+        };
+
+        jest.clearAllMocks();
+    });
+
+    test("Campaign creator request is missing", async () => {
+        User.findOne.mockResolvedValue({ id: 1, username: "testuser", role: "campaign_creator" });
+        CampaignCreatorRequest.findOne.mockResolvedValue(null);
+
+        await login(req, res);
+
+        expect(req.session.error).toBe("User not have a Campaign Creator Request. Contact us to fix your problem.");
+        expect(res.redirect).toHaveBeenCalledWith("/login");
+    });
+
+    test("Pending campaign creator request", async () => {
+        User.findOne.mockResolvedValue({ id: 1, username: "testuser", role: "campaign_creator" });
+        CampaignCreatorRequest.findOne.mockResolvedValue({ status: "Pending" });
+
+        await login(req, res);
+
+        expect(req.session.error).toBe("Your request to be a campaign creator wasnt validated. Please try again later.");
+        expect(res.redirect).toHaveBeenCalledWith("/login");
+    });
+
+    test("Approved campaign creator request", async () => {
+        User.findOne.mockResolvedValue({ id: 1, username: "testuser", role: "campaign_creator" });
+        CampaignCreatorRequest.findOne.mockResolvedValue({ status: "Approved" });
+
+        await login(req, res);
+
+        expect(res.redirect).toHaveBeenCalledWith("/campaigns/create");
+    });
+
+    test("Delete Srejected campaign creator request", async () => {
+        const mockUser = { id: 1, username: "testuser", role: "campaign_creator", destroy: jest.fn() };
+        User.findOne.mockResolvedValue(mockUser);
+        CampaignCreatorRequest.findOne.mockResolvedValue({ status: "Rejected" });
+
+        await login(req, res);
+
+        expect(mockUser.destroy).toHaveBeenCalled();
+        expect(req.session.error).toBe(
+            "Your request to be a campaign creator was rejected. Please register again with a valid information/document."
+        );
+        expect(res.redirect).toHaveBeenCalledWith("/login");
+    });
+
+    test("Invalid status in campaign creator request", async () => {
+        User.findOne.mockResolvedValue({ id: 1, username: "testuser", role: "campaign_creator" });
+        CampaignCreatorRequest.findOne.mockResolvedValue({ status: "InvalidStatus" });
+
+        await login(req, res);
+
+        expect(req.session.error).toBe(
+            "User not have a valid status (InvalidStatus) in his Campaign Creator Request. Contact us to fix your problem."
+        );
+        expect(res.redirect).toHa
     });
 });
 
