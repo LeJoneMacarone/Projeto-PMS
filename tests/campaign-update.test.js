@@ -1,5 +1,6 @@
 const request = require('supertest');
 const express = require('express');
+const session = require("express-session");
 const multer = require('multer');
 const { createCampaignUpdate } = require('../controllers/campaign-update-controller.js');
 
@@ -18,6 +19,13 @@ const { models } = require('../utils/sequelize.js');
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(
+  session({
+    secret: "test-secret",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 
 // Upload with multer middleware
 const upload = multer();
