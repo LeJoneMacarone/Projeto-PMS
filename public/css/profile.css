@@ -48,8 +48,13 @@
 
 .submit-btn{
     height: 3rem;
+    width: 65%;
 }
 @media screen and (max-width: 767px) {
+    .title{
+        text-align: center;
+    }
+
     .user-info>*{
         margin-inline: 2rem;
     }
