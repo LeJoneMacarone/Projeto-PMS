@@ -6,24 +6,25 @@ exports.getAllReports = async (req, res) => {
         const { user } = req.session;
 
         if (!user) {
-            res.redirect("/login");
+            return res.redirect("/login");
         }
 
-        if (!(user.role == "administrator" || user.role == "root_administrator")) {
-            res.redirect("/login");
+        if (!(user.role === "administrator" || user.role === "root_administrator")) {
+            return res.redirect("/login");
         }
 
         const reports = await Report.findAll({
             include: [
                 { model: Campaign, as: 'campaign' },
                 { model: User, as: 'reporter' }
-            ]
+            ],
         });
 
-        res.render('admin_validate_reports_view', { user, reports: reports });
-        //res.status(200).json(reports); //show data for debugging
+        return res.render('admin_validate_reports_view', { user, reports: reports });
+        //return res.status(200).json(reports); //show data for debugging
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.log("Error in getAllReports", error);
+        return res.status(500).json({ error: error.message });
     }
 };
 
@@ -33,11 +34,11 @@ exports.getReportById = async (req, res) => {
         const { user } = req.session;
 
         if (!user) {
-            res.redirect("/login");
+            return res.redirect("/login");
         }
 
-        if (!(user.role == "administrator" || user.role == "root_administrator")) {
-            res.redirect("/login");
+        if (!(user.role === "administrator" || user.role === "root_administrator")) {
+            return res.redirect("/login");
         }
 
         const report = await Report.findByPk(req.params.id, {
@@ -52,7 +53,7 @@ exports.getReportById = async (req, res) => {
                     ],
                 },
                 { model: User, as: 'reporter' }
-            ]
+            ],
         });
 
         if (!report) {
@@ -69,11 +70,12 @@ exports.getReportById = async (req, res) => {
             return res.status(404).json({ error: 'Campaign Creator not found' });
         }
 
-        res.render('admin_validate_report_info', { user, report: report });
-        //res.status(200).json(report); //show data for debugging
+        return res.render('admin_validate_report_info', { user, report: report });
+        //return res.status(200).json(report); //show data for debugging
 
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.log("Error in getReportById", error);
+        return res.status(500).json({ error: error.message });
     }
 };
 
@@ -82,9 +84,9 @@ exports.createReport = async (req, res) => {
     try {
         const { description, campaignId, reporterId } = req.body;
         await Report.create({ description, campaignId, reporterId});
-        res.redirect("/campaigns");
+        return res.redirect("/campaigns");
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        return res.status(500).json({ error: error.message });
     }
 };
 
@@ -94,11 +96,11 @@ exports.deleteReport = async (req, res) => {
         const { user } = req.session;
 
         if (!user) {
-            res.redirect("/login");
+            return res.redirect("/login");
         }
 
         if (!(user.role == "administrator" || user.role == "root_administrator")) {
-            res.redirect("/login");
+            return res.redirect("/login");
         }
         
         const report = await Report.findByPk(req.params.id);
@@ -106,8 +108,8 @@ exports.deleteReport = async (req, res) => {
             return res.status(404).json({ error: 'Report not found' });
         }
         await report.destroy();
-        res.redirect("/reports");
+        return res.redirect("/reports");
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        return res.status(500).json({ error: error.message });
     }
 };

@@ -1,4 +1,4 @@
-const { CampaignUpdate } = require("../utils/sequelize.js").models
+const { CampaignUpdate } = require("../utils/sequelize.js").models;
 
 /** 
  * Create an update for the campaign.
@@ -9,14 +9,25 @@ const { CampaignUpdate } = require("../utils/sequelize.js").models
  * @returns{void}
  */
 async function createCampaignUpdate(req, res) {	
-	let data = {};
-	data.campaignId = req.body.campaignId;
-	data.content = req.body.content;
-	if (req.file) data.media = req.file.buffer;
+	try {
+		let data = {};
+		data.campaignId = req.body.campaignId;
+		data.content = req.body.content;
 
-	await CampaignUpdate.create(data);
+		// Validate the request body
+		if (!data.campaignId || !data.content) {
+			return res.status(400).json({ error: "campaignId and content are required." });
+		}
 
-	res.redirect("/campaigns");
+		if (req.file) data.media = req.file.buffer;
+
+		await CampaignUpdate.create(data);
+
+		res.redirect("/campaigns");
+	} catch (error) {
+		console.error("Error creating campaign update:", error);
+		res.status(500).json({ error: "An error occurred while creating the campaign update." });
+	}
 }
 
 module.exports = { createCampaignUpdate };
