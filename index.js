@@ -39,7 +39,10 @@ app.use("/reports", reportRoutes);
 app.use("/campaign_creators", campaignCreatorRequestRoutes);
 
 // Entry point
-app.listen(PORT, () => {
-	console.log(`Listenning at port ${PORT}`)
-});
+if (process.env.NODE_ENV !== "test") {
+    app.listen(PORT, () => {
+        console.log(`Listenning at port ${PORT}`)
+    });
+}
 
+module.exports = app;
