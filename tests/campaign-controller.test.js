@@ -3,6 +3,11 @@ const request = require("supertest");
 const { Campaign, User, Donation, CampaignUpdate, CampaignRequest, CampaignCreatorRequest } = require("../utils/sequelize").models;
 
 jest.mock("../utils/sequelize", () => ({
+  sequelize: {
+    fn: jest.fn(),
+    col: jest.fn(),
+    literal: jest.fn(),
+  },
   models: {
     Campaign: { create: jest.fn(), findAll: jest.fn(), findOne: jest.fn(), findByPk: jest.fn(), destroy: jest.fn() },
     User: { findOne: jest.fn() },
@@ -33,6 +38,8 @@ describe("POST /campaigns/create", () => {
         .post("/login")
         .send(user);
     }
+
+    CampaignRequest.create.mockResolvedValue({id: 1});
 
     const response = await agent
       .post("/campaigns/create")
@@ -90,7 +97,7 @@ describe("GET /campaigns/create", () => {
 
   test.each([
     { id: 1, username: 'creator', password: "password", role: 'campaign_creator' },
-  ])("should create a campaign for authorized users with role 'campaign_creator'", async (user) => {
+  ])("should render a campaign form page for authorized users with role 'campaign_creator'", async (user) => {
     User.findOne.mockResolvedValue(user);
     CampaignCreatorRequest.findOne.mockResolvedValue({ id: 200, creatorId: user.id, status: "Approved" });
 
@@ -100,8 +107,7 @@ describe("GET /campaigns/create", () => {
       .send(user);
 
     const response = await agent
-      .post("/campaigns/create")
-      .send({});
+      .get("/campaigns/create")
 
     expect(response.status).toBe(200);
   });
@@ -188,6 +194,7 @@ describe("GET /campaigns/:id(\\d+)", () => {
     ];
 
     Campaign.findAll.mockResolvedValue(campaignsMock);
+    Donation.findAll.mockResolvedValue([]);
 
     const response = await agent
       .get("/campaigns/1");
@@ -220,7 +227,9 @@ describe("GET /campaigns/owned", () => {
           goal: 1000,
           media: null,
         },
-        creator: { dataValues: { id: 1, username: "creator" } },
+        campaignRequest:{
+          status: "accepted",
+        }
       },
     ];
 
@@ -306,6 +315,9 @@ describe("GET /campaigns/:id/delete", () => {
       .post("/login")
       .send(user);
 
+    Campaign.findByPk.mockResolvedValue({ campaignRequestId: 1, destroy: jest.fn().mockResolvedValue()});
+    CampaignRequest.findByPk.mockResolvedValue({ destroy: jest.fn().mockResolvedValue()});  
+
     const response = await agent
       .get("/campaigns/1/delete")
 
@@ -324,6 +336,9 @@ describe("GET /campaigns/:id/delete", () => {
     await agent
       .post("/login")
       .send(user);
+
+    Campaign.findByPk.mockResolvedValue({ campaignRequestId: 1, destroy: jest.fn().mockResolvedValue()});
+    CampaignRequest.findByPk.mockResolvedValue({ destroy: jest.fn().mockResolvedValue()});
 
     const response = await agent
       .get("/campaigns/1/delete")
