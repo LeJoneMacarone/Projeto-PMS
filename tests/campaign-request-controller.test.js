@@ -11,6 +11,10 @@ jest.mock("../utils/sequelize", () => ({
     },
 }));
 
+afterEach(() => {
+	CampaignRequest.update.mockClear();
+});
+
 describe("GET /request/campaigns", () => {
 	test("should redirect unauthorized users to the login page", async () => {
 		const response = await request(app).get("/requests/campaigns");
@@ -67,6 +71,7 @@ describe('POST /requests/campaigns', () => {
             .post('/requests/campaigns')
             .send({ campaignRequestId: 123, status: 'Approved' });
 
+		expect(CampaignRequest.update).not.toBeCalled();
 		expect(response.status).not.toBe(200);
     });
 
@@ -89,6 +94,7 @@ describe('POST /requests/campaigns', () => {
 			.post("/requests/campaigns")
 			.send({ campaignRequestId: 123, status: "Approved" });
 
+		expect(CampaignRequest.update).not.toBeCalled();
 		expect(response.status).not.toBe(200);
     });
 	
