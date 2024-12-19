@@ -1,49 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- include("./partials/head.ejs", {title: "Profile"});  %>
+<%- include("./partials/head.ejs", {title: "Profile"}); %>
 <body>
     <%- include("./partials/nav_bar.ejs") %>
-    <div class="container-md">
-        <h3>Profile</h3>
-        <% if (error) {%>
+    <div class="container-md mt-4">
+        <h2 class="title">Profile</h2>
+        <% if (error) { %>
             <div class="alert alert-danger" role="alert">
                 <%= error %>
             </div>
         <% } %>
         <form action="/profile" method="POST" enctype="multipart/form-data" onsubmit="return comparePasswords()">
             <div class="row">
-                <!--Left column-->
-                <div class="col-md-3">
-                    <div class="profile-img">
-                        <img class="profile-img" alt="profile" src=<%= user.picture
-                            ? `data:image/gif;base64,${ Buffer.from(user.picture).toString("base64") }` 
-                            : "/images/profile.png"%>>
+                <!-- Left column -->
+                <div class="col-md-4 text-center">
+                    <div class="profile-img mb-3">
+                        <img class="rounded-circle border border-secondary img-fluid" 
+                             style="max-width: 150px; max-height: 150px;" 
+                             alt="profile" 
+                             src="<%= user.picture
+                                ? `data:image/gif;base64,${Buffer.from(user.picture).toString("base64")}`
+                                : '/images/profile.png' %>">
                     </div>
-                    <label for="form-group">
-                        <span>Profile Picture</span>
-                        <input id="picture" type="file" name="picture" class="form-control" accept="video/*,image/png,image/jpeg">
-                    </label>
+                    <div class="mb-4">
+                        <label for="picture" class="form-label fw-bold">Upload Profile Picture</label>
+                        <input id="picture" type="file" name="picture" 
+                               class="form-control border border-secondary rounded-pill" 
+                               accept="image/png,image/jpeg">
+                    </div>
                 </div>
-                <!--Right column-->
-                <div class="col-md-8 user-info">
-                    <label class="form-group">
-                        <span>Username</span>
-                        <textarea name="newUsername" class="form-control username-field"><%= user.username %></textarea>
-                    </label>
-                    <div class="divisor"></div>
-                    <label class="form-group">
-                        <span>Current Password:</span>
-                        <input type="password" class="form-control" name="currentPassword" required>
-                    </label>
-                    <label class="form-group">
-                        <span>New Password:</span>
-                        <input type="password" class="form-control" name="newPassword" required>
-                    </label>
-                    <label class="form-group">
-                        <span>Confirm New Password:</span>
-                        <input type="password" class="form-control" name="newPasswordConfirmation" required>
-                    </label>
-                    <button type="submit" class="btn btn-primary submit-btn">Save Changes</button>
+                <!-- Right column -->
+                <div class="col-md-8">
+                    <div class="mb-3">
+                        <label for="newUsername" class="form-label">Username</label>
+                        <textarea id="newUsername" name="newUsername" class="form-control" rows="1" 
+                                  style="resize: none;"><%= user.username %></textarea>
+                    </div>
+                    <hr>
+                    <div class="mb-3">
+                        <label for="currentPassword" class="form-label">Current Password</label>
+                        <input id="currentPassword" type="password" class="form-control" name="currentPassword" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="newPassword" class="form-label">New Password</label>
+                        <input id="newPassword" type="password" class="form-control" name="newPassword" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="newPasswordConfirmation" class="form-label">Confirm New Password</label>
+                        <input id="newPasswordConfirmation" type="password" class="form-control" 
+                               name="newPasswordConfirmation" required>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-success submit-btn">Save Changes</button>
+                    </div>
                 </div>
             </div>
         </form>
