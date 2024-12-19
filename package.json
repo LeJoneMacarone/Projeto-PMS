@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "jest ./tests --coverage"
+    "test": "jest --verbose",
+    "test-coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",
