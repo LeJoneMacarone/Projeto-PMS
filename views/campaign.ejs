@@ -62,7 +62,7 @@
                             <% latestDonors.forEach((donor) => { %>
                                 <div class="list-group-item d-flex align-items-center">
                                     <img src="<%= donor.picture
-											  ? `data:image/gif;base64,${ Buffer.from(donor.picture).string("base64") }` 
+											  ? `data:image/gif;base64,${ Buffer.from(donor.picture).toString("base64") }` 
 											  : "/images/profile.png" %>" 
 										 alt="donor_profile" 
 										 class="rounded-circle" 

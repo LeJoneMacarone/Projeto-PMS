@@ -160,20 +160,20 @@ async function renderCampaign(req, res) {
 
 	const topDonors = topDonations.map(row => {
 		return {
-			id: row.dataValues.donor.dataValues.id,
-			username: row.dataValues.donor.dataValues.username,
-			profile: row.dataValues.donor.dataValues.profilePicture,
+			id: row.donor.id,
+			username: row.donor.username,
+			picture: row.donor.picture,
 			amountDonated: row.dataValues.totalAmount,
-		}
+		};
 	});
 
 	const latestDonors = latestDonations.map(row => {
 		return {
-			id: row.dataValues.donor.dataValues.id,
-			username: row.dataValues.donor.dataValues.username,
-			profile: row.dataValues.donor.dataValues.profilePicture,
-			amountDonated: row.dataValues.value,
-		}
+			id: row.donor.id,
+			username: row.donor.username,
+			picture: row.donor.picture,
+			amountDonated: row.value,
+		};
 	});
 
 	const { user } = req.session;
