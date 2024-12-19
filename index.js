@@ -22,6 +22,7 @@ app.set('views', `${__dirname}/views`);
 app.set('view engine', 'ejs');
 app.use(express.static(__dirname + "/public"));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(session({
     secret: SECRET,
     saveUninitialized: true,
@@ -39,7 +40,10 @@ app.use("/reports", reportRoutes);
 app.use("/campaign_creators", campaignCreatorRequestRoutes);
 
 // Entry point
-app.listen(PORT, () => {
-	console.log(`Listenning at port ${PORT}`)
-});
+if (process.env.NODE_ENV !== "test") {
+    app.listen(PORT, () => {
+        console.log(`Listenning at port ${PORT}`)
+    });
+}
 
+module.exports = app;

@@ -12,7 +12,14 @@ const CAMPAIGNS_PER_PAGE = 6;
  * @returns{void}
  */
 async function createCampaign(req, res) {
-	// TODO: maybe check if user is actually a creator(?)
+	const { user } = req.session;
+
+	if (!user || user.role != "campaign_creator") {
+		req.session.error = "Login as a campaign creator to access this page."
+		res.redirect("/login");
+		return;
+	}
+	
 	const { title, description, goal, endDate, iban } = req.body;
 	
 	let campaign = { title, description, goal, endDate, iban }; 
