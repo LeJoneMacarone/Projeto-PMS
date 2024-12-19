@@ -4,11 +4,8 @@ exports.getAllPendingCampaignCreatorRequest = async (req, res) => {
     try {
         const { user } = req.session;
 
-        if (!user) {
-            res.redirect("/login");
-        }
-
-        if (!(user.role == "administrator" || user.role == "root_administrator")) {
+        if (!user || !(user.role == "administrator" || user.role == "root_administrator")) {
+            req.session.message = "Login as an administrator to access this feature.";
             res.redirect("/login");
         }
 
@@ -22,7 +19,6 @@ exports.getAllPendingCampaignCreatorRequest = async (req, res) => {
         });
 
         res.render('admin_validate_creator_view', { user, requests });
-        //res.status(200).json(requests);
 
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -35,12 +31,9 @@ exports.updateCampaignCreatorRequestStatus = async (req, res) => {
         const { status } = req.body;
         const { user } = req.session;
 
-        if (!user) {
-            res.redirect("/login");
-        }
-
-        if (!(user.role == "administrator" || user.role == "root_administrator")) {
-            res.redirect("/login");
+        if (!user || !(user.role == "administrator" || user.role == "root_administrator")) {
+            req.session.message = "Login as an administrator to access this feature.";
+            return res.redirect("/login");
         }
 
         const request = await CampaignCreatorRequest.findByPk(id, {
@@ -58,7 +51,6 @@ exports.updateCampaignCreatorRequestStatus = async (req, res) => {
         }
 
         await request.update({ status });
-
         res.redirect("/campaign_creators");
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -69,12 +61,9 @@ exports.getCampaignCreatorRequestById = async (req, res) => {
     try {
         const { user } = req.session;
 
-        if (!user) {
-            res.redirect("/login");
-        }
-
-        if (!(user.role == "administrator" || user.role == "root_administrator")) {
-            res.redirect("/login");
+        if (!user || !(user.role == "administrator" || user.role == "root_administrator")) {
+            req.session.message = "Login as an administrator to access this feature.";
+            return res.redirect("/login");
         }
 
         const request = await CampaignCreatorRequest.findByPk(req.params.id, {
@@ -84,11 +73,11 @@ exports.getCampaignCreatorRequestById = async (req, res) => {
         });
 
         if (!request) {
-            return res.status(404).json({ error: 'Request not found' });
+            // req.session.message = 'Request not found';
+            return res.redirect("/campaign_creators");
         }
 
         res.render('admin_validate_creator_info', { user, request });
-        // res.status(200).json(request);
 
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -97,19 +86,27 @@ exports.getCampaignCreatorRequestById = async (req, res) => {
 
 exports.getIdentificationDocument = async (req, res) => {
     try {
+        const { user } = req.session;
         const { id } = req.params;
+
+        if (!user || !(user.role == "administrator" || user.role == "root_administrator")) {
+            req.session.message = "Login as an administrator to access this feature.";
+            return res.redirect("/login");
+        }
+
         const request = await CampaignCreatorRequest.findByPk(id);
+
         if (!request || !request.identificationDocument) {
-            return res.status(404).json({ error: 'Document not found' });
+            // req.session.message = "Document not found";
+            return res.redirect("/campaign_creators");
         }
 
         // Sets the header for the PDF content type
         res.setHeader('Content-Type', 'application/pdf');
-
         res.send(request.identificationDocument);
+    
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'An error occurred' });
+        res.status(500).json({ error: error.message });
     }
 };
 
@@ -117,20 +114,21 @@ exports.deleteCampaignCreatorRequest = async (req, res) => {
     try {
         const { user } = req.session;
 
-        if (!user) {
-            res.redirect("/login");
-        }
-
-        if (!(user.role == "administrator" || user.role == "root_administrator")) {
-            res.redirect("/login");
+        if (!user || !(user.role == "administrator" || user.role == "root_administrator")) {
+            req.session.message = "Login as an administrator to access this feature.";
+            return res.redirect("/login");
         }
 
         const request = await CampaignCreatorRequest.findByPk(req.params.id);
+
         if (!request) {
-            return res.status(404).json({ error: 'Request not found' });
+            // req.session.message = "Request not found";
+            return res.redirect("/campaign_creators");
         }
+
         await request.destroy();
-        res.render("admin_validate_creator_view", { user }); //TODO redirect when the route to admin pages is done
+        res.redirect("/campaign_creators");
+    
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
