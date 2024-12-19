@@ -83,6 +83,8 @@ async function renderCampaigns(req, res) {
 		offset: page * CAMPAIGNS_PER_PAGE,
 	}) || [];
 
+	const campaignsCount = await Campaign.count();
+
 	const campaigns = result.map(({ dataValues, creator }) => { 
 		const { id, title, description, goal, media } = dataValues;
 		let campaign = { id, title, description, goal, media };
@@ -90,7 +92,7 @@ async function renderCampaigns(req, res) {
 		return campaign;
 	});
 
-	res.render("home", { user, campaigns, page });
+	res.render("home", { user, campaigns, page, campaignsCount });
 }
 
 /** 
