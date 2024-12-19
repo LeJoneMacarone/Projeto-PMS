@@ -12,10 +12,6 @@ async function updateCampaignRequestStatus(req, res) {
 	const { user } = req.session;
 	const { campaignRequestId, status } = req.body;
 
-	console.log({ validatorId: user.id, campaignRequestId, status });
-
-	// TODO: check status before updating
-
 	await Campaign.update({ validatorId: user.id }, { where: { campaignRequestId } });
 	await CampaignRequest.update({ status }, { where: { id: campaignRequestId } });
 
@@ -31,16 +27,12 @@ async function updateCampaignRequestStatus(req, res) {
  * @returns{void}
  */
 async function renderCampaignRequests(req, res) {
-
 	const { user } = req.session;
 
-	if (!user) {
-		res.redirect("/login");
-	}
-
-	if (!(user.role == "administrator" || user.role == "root_administrator")) {
+	if (!user || !(user.role == "administrator" || user.role == "root_administrator")) {
 		req.session.error = "Login as administrator or root_administrator to access this feature";
 		res.redirect("/login");
+		return;
 	}
 
 	const campaigns = await Campaign.findAll({

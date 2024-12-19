@@ -33,7 +33,7 @@ exports.updateCampaignCreatorRequestStatus = async (req, res) => {
 
         if (!user || !(user.role == "administrator" || user.role == "root_administrator")) {
             req.session.message = "Login as an administrator to access this feature.";
-            return res.redirect("/login");
+            res.redirect("/login");
         }
 
         const request = await CampaignCreatorRequest.findByPk(id, {
@@ -63,7 +63,7 @@ exports.getCampaignCreatorRequestById = async (req, res) => {
 
         if (!user || !(user.role == "administrator" || user.role == "root_administrator")) {
             req.session.message = "Login as an administrator to access this feature.";
-            return res.redirect("/login");
+            res.redirect("/login");
         }
 
         const request = await CampaignCreatorRequest.findByPk(req.params.id, {
@@ -116,7 +116,7 @@ exports.deleteCampaignCreatorRequest = async (req, res) => {
 
         if (!user || !(user.role == "administrator" || user.role == "root_administrator")) {
             req.session.message = "Login as an administrator to access this feature.";
-            return res.redirect("/login");
+            res.redirect("/login");
         }
 
         const request = await CampaignCreatorRequest.findByPk(req.params.id);
