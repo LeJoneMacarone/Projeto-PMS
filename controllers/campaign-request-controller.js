@@ -10,6 +10,12 @@ const { Campaign, CampaignRequest, User } = require("../utils/sequelize.js").mod
  */
 async function updateCampaignRequestStatus(req, res) {
 	const { user } = req.session;
+
+	if (!user || !(user.role == "administrator" || user.role == "root_administrator")) {
+		req.session.message = "Login as an administrator to access this feature";
+		return res.redirect("/login");
+	}
+
 	const { campaignRequestId, status } = req.body;
 
 	await Campaign.update({ validatorId: user.id }, { where: { campaignRequestId } });
