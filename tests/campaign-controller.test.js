@@ -281,7 +281,7 @@ describe("GET /campaigns/:id/delete", () => {
         .post("/login")
         .send(user);
     }
-    const response = agent.get("/campaigns/1/delete");
+    const response =await agent.get("/campaigns/1/delete");
     expect(response.status).toBe(302);
     expect(response.headers.location).toBe("/login");
   });
